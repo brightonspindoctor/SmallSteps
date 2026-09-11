@@ -1,7 +1,7 @@
-const CACHE = 'small-steps-v1.25-themes';
+const CACHE = 'small-steps-v1.27-forest';
 const ASSETS = [
   './','./index.html','./manifest.webmanifest','./css/base.css','./js/app.js',
-  './assets/icons/icon-180.png','./assets/icons/icon-192.png','./assets/icons/icon-512.png'
+  './assets/icons/icon-180.png','./assets/icons/icon-192.png','./assets/icons/icon-512.png','./assets/icons/icon-1024.png','./assets/illustrations/forest-scene.jpg','./assets/illustrations/forest-bg.jpg','./assets/illustrations/forest-bg-portrait.jpg','./assets/illustrations/happenings-envelope.svg'
 ];
 self.addEventListener('install', event => event.waitUntil(caches.open(CACHE).then(c => c.addAll(ASSETS)).then(() => self.skipWaiting())));
 self.addEventListener('activate', event => event.waitUntil(caches.keys().then(keys => Promise.all(keys.filter(k => k !== CACHE).map(k => caches.delete(k)))).then(() => self.clients.claim())));
