@@ -1,4 +1,4 @@
-const CACHE = 'small-steps-v1.23';
+const CACHE = 'small-steps-v1.25-themes';
 const ASSETS = [
   './','./index.html','./manifest.webmanifest','./css/base.css','./js/app.js',
   './assets/icons/icon-180.png','./assets/icons/icon-192.png','./assets/icons/icon-512.png'

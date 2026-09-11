@@ -1,7 +1,7 @@
 {
   "name": "Small Steps",
   "short_name": "Small Steps",
-  "description": "Stretching, meditation and gentle real-world side quests.",
+  "description": "Stretching, meditation and gentle real-world Happenings.",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
