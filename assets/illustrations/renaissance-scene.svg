@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 400">
+<defs>
+<linearGradient id="rsky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#bcd9f0"/><stop offset="1" stop-color="#e8f0d8"/></linearGradient>
+<linearGradient id="rwater" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#6f9dbf"/><stop offset="1" stop-color="#3d6f8f"/></linearGradient>
+</defs>
+<rect width="900" height="400" fill="url(#rsky)"/>
+<circle cx="150" cy="80" r="60" fill="#ffffff" opacity=".55"/>
+<circle cx="700" cy="60" r="40" fill="#ffffff" opacity=".5"/>
+<path d="M0 260 L150 190 L260 250 L400 170 L560 245 L700 185 L900 250 V400 H0Z" fill="#7f9a72"/>
+<path d="M0 300 L150 250 L260 300 L400 235 L560 300 L700 245 L900 300 V400 H0Z" fill="#587a55"/>
+<g fill="#5a6a72">
+<rect x="330" y="120" width="26" height="90"/><polygon points="330,120 343,98 356,120" fill="#425058"/>
+<rect x="380" y="90" width="34" height="120"/><polygon points="380,90 397,60 414,90" fill="#3a4750"/>
+<rect x="430" y="130" width="24" height="80"/><polygon points="430,130 442,110 454,130" fill="#425058"/>
+<rect x="470" y="105" width="30" height="105"/><polygon points="470,105 485,80 500,105" fill="#3a4750"/>
+<rect x="360" y="150" width="120" height="70"/>
+</g>
+<rect x="393" y="130" width="8" height="45" fill="#6b7880"/>
+<polygon points="397,130 397,148 415,139" fill="#b23a22"/>
+<path d="M330 260 C400 280 500 280 570 260 L570 300 C500 320 400 320 330 300 Z" fill="#8b8f92"/>
+<path d="M330 260 C400 280 500 280 570 260" fill="none" stroke="#5f6468" stroke-width="6"/>
+<path d="M0 340 C160 300 300 330 450 345 C600 360 760 320 900 340 V400 H0Z" fill="url(#rwater)"/>
+</svg>

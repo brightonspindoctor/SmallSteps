@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 400">
+<defs>
+<linearGradient id="isky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2a0e0c"/><stop offset="1" stop-color="#5c1810"/></linearGradient>
+<radialGradient id="iglow" cx="50%" cy="90%" r="70%"><stop offset="0" stop-color="#ffb37a" stop-opacity=".9"/><stop offset="1" stop-color="#e8763f" stop-opacity="0"/></radialGradient>
+</defs>
+<rect width="900" height="400" fill="url(#isky)"/>
+<circle cx="450" cy="360" r="260" fill="url(#iglow)"/>
+<path d="M0 260 L140 140 L260 240 L420 110 L560 235 L720 130 L900 240 V400 H0Z" fill="#1c0d0a"/>
+<path d="M0 300 L150 210 L280 300 L430 190 L590 300 L740 205 L900 300 V400 H0Z" fill="#120705"/>
+<path d="M420 110 L438 160 L400 160 Z" fill="#e8763f"/>
+<path d="M560 235 L575 270 L545 270 Z" fill="#ff9c56"/>
+<path d="M260 240 L275 275 L245 275 Z" fill="#e8763f"/>
+<path d="M430 190 C440 240 470 260 470 300 C470 340 430 360 430 400 L470 400 C480 360 510 340 505 295 C500 250 460 235 430 190Z" fill="#ff9c56" opacity=".85"/>
+<path d="M150 210 C165 250 190 265 188 300 C186 335 155 350 158 400 L188 400 C196 360 220 345 214 305 C208 260 175 245 150 210Z" fill="#e8763f" opacity=".7"/>
+</svg>
