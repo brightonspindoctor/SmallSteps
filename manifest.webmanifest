@@ -1,0 +1,15 @@
+{
+  "name": "Small Steps",
+  "short_name": "Small Steps",
+  "description": "Small daily movement, mobility and meditation — with gentle real-world side quests.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#f5f3eb",
+  "theme_color": "#183b27",
+  "icons": [
+    {"src":"assets/icons/icon-192.png","sizes":"192x192","type":"image/png","purpose":"any maskable"},
+    {"src":"assets/icons/icon-512.png","sizes":"512x512","type":"image/png","purpose":"any maskable"}
+  ]
+}
