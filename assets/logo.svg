@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+<rect width="512" height="512" rx="92" fill="#F6F3E8"/>
+<circle cx="356" cy="132" r="72" fill="#EFCF8D"/>
+<!-- distant hills --> <path d="M0 310 L115 205 L185 270 L270 175 L370 275 L455 220 L512 285 V390 H0Z" fill="#A9BDB0"/>
+<!-- forest -->
+<g fill="#285C47">
+<path d="M75 355 L120 250 L165 355Z"/><path d="M92 322 L120 270 L148 322Z"/>
+<path d="M145 370 L205 205 L265 370Z"/><path d="M169 316 L205 238 L241 316Z"/>
+<path d="M292 370 L348 220 L404 370Z"/><path d="M315 318 L348 248 L381 318Z"/>
+<path d="M385 370 L432 260 L479 370Z"/><path d="M405 325 L432 282 L459 325Z"/>
+</g>
+<g fill="#3D7A5B"><path d="M20 378 L65 278 L110 378Z"/><path d="M410 385 L458 270 L506 385Z"/></g>
+<!-- winding path -->
+<path d="M235 512 C215 450 245 410 282 372 C314 339 308 306 270 270 C257 258 249 247 249 232 C249 219 260 210 274 213 C323 224 349 272 341 316 C333 360 292 386 274 420 C257 452 278 484 310 512Z" fill="#FFFDF6"/>
+</svg>
