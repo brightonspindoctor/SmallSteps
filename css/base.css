@@ -6,81 +6,127 @@ html,body{min-height:100%;background:var(--sand)}body{margin:0;color:var(--ink);
 @media(min-width:900px){.app{padding-top:30px}.practice{min-height:165px}}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;scroll-behavior:auto!important}}
 
-/* Beta 1.24 visual polish: accessible contrast + three distinct appearance worlds */
-:root{
-  --focus:#9a6b13;
-  --card-strong:var(--card);
-}
-body.theme-forest{
-  --forest:#1f5a43;--forest-deep:#173d30;--sage:#557967;--sand:#f6f3e8;--paper:#fbfaf5;--card:#fffdf8;--ink:#17251f;--muted:#43574e;--line:#d1dbd3;--sky:#dbe8e7;--focus:#8a6210;
-  background:linear-gradient(180deg,#f6f3e8,#e9eee6)!important;
-}
-body.theme-forest .theme-swatch.forest{background:linear-gradient(160deg,#f6f3e8 0 35%,#a9bdb0 35% 52%,#1f5a43 52%)}
-body.theme-forest .theme-swatch.renaissance{background:linear-gradient(160deg,#efe3c7 0 35%,#9b7a48 35% 55%,#303b55 55%)}
-body.theme-forest .theme-swatch.hell{background:linear-gradient(160deg,#1b1718 0 38%,#6d2520 38% 62%,#d08a2f 62%)}
+/* Small Steps v1.25 visual system: Forest / Renaissance / Inferno */
+:root{--radius-lg:22px;--radius-md:16px;--focus:#d5a83b}
+body{transition:background .2s ease,color .2s ease}
+img{max-width:100%}
+.brand-mark-small{object-fit:cover;background:var(--paper);border:1px solid var(--line)}
+.simple-begin-logo{object-fit:cover;background:var(--paper)}
+.card{color:var(--ink)}
+.card h2,.card h1,.brand-name,.brand-copy h1{color:var(--forest-deep)}
+.muted{color:var(--muted)!important}
+/* Make all light cards use a guaranteed dark text colour. */
+.practice.stretch,.practice.meditate,.practice.run-warm,.practice.run-cool{color:var(--ink)}
+.practice.stretch strong,.practice.meditate strong,.practice.run-warm strong,.practice.run-cool strong{color:inherit}
+.practice.stretch small,.practice.meditate small,.practice.run-warm small,.practice.run-cool small{color:inherit}
+.secondary{color:var(--ink);background:var(--card);border-color:var(--line)}
+.choice,.lengths button,.meditation-list button,.muscles label,.theme-option{color:var(--ink);background:var(--card)}
+.choice small,.lengths span,.meditation-list span,.theme-option small{color:var(--muted)!important}
+.bottom-nav button{color:var(--muted)}
+.bottom-nav button.active{color:var(--forest);background:color-mix(in srgb,var(--forest) 10%,var(--card))}
+.side-quest-envelope{border-color:var(--gold);background:var(--card);overflow:hidden}
+.side-quest-envelope .envelope-body{background:var(--paper);border-color:color-mix(in srgb,var(--gold) 70%,var(--ink));}
+.side-quest-envelope .envelope-flap{background:var(--card);border-bottom-color:color-mix(in srgb,var(--gold) 70%,var(--ink));}
+.side-quest-envelope .envelope-seal{background:var(--gold);color:var(--forest-deep)}
+.envelope-count{background:var(--forest)}
+.support-card{display:grid;grid-template-columns:58px 1fr;gap:16px;align-items:start}
+.support-card h2{margin-bottom:6px}
+.support-icon{width:58px;height:58px;border-radius:17px;display:grid;place-items:center;background:var(--gold);color:var(--forest-deep);font-size:28px;border:1px solid color-mix(in srgb,var(--gold) 70%,var(--ink));box-shadow:0 7px 18px rgba(0,0,0,.08)}
+.support-link{display:flex;align-items:center;justify-content:space-between;gap:12px;text-decoration:none;border:1px solid var(--forest);background:var(--forest);color:#fff;padding:12px 14px;border-radius:13px;font-weight:800;margin-top:12px}
+.support-link span{font-size:18px}
+.theme-option.active{border-color:var(--forest);box-shadow:0 0 0 2px color-mix(in srgb,var(--forest) 18%,transparent)}
+.theme-swatch{overflow:hidden;position:relative}
+.theme-swatch.renaissance{background:linear-gradient(160deg,#a9c1d2 0 40%,#566a79 40% 64%,#b28b4e 64% 100%)}
+.theme-swatch.inferno{background:linear-gradient(160deg,#180f12 0 38%,#6f1d1f 38% 64%,#f15a28 64% 100%)}
 
-/* Renaissance: parchment, oak, steel and heraldic details. */
-body.theme-renaissance{
-  --forest:#5b3c24;--forest-deep:#30251e;--sage:#8a6840;--leaf:#b79b68;--sand:#e9dfc7;--paper:#f4ecd8;--card:#fbf4e2;--ink:#2c241e;--muted:#5c5046;--line:#cdbb98;--sky:#d8d1c0;--gold:#b9892e;--focus:#704c16;
-  background:radial-gradient(circle at 50% -10%,#f8f0db 0,#e9dfc7 52%,#d9ccb0 100%)!important;
-  font-family:Georgia,"Times New Roman",serif;
-}
-body.theme-renaissance .card{border:2px solid #b99a64;border-radius:8px;box-shadow:0 7px 18px rgba(67,49,26,.13);background:var(--card)}
-body.theme-renaissance .card::before{content:"";display:block;position:absolute;inset:5px;border:1px solid rgba(112,76,22,.16);border-radius:5px;pointer-events:none}
-body.theme-renaissance .primary{background:#5b3c24;border-color:#3d2818;box-shadow:0 5px 0 #352216;color:#fff8e8}
-body.theme-renaissance .secondary{background:#e5d7b9;border-color:#aa8c5a;color:#30251e}
-body.theme-renaissance .text-button{color:#704c16}
-body.theme-renaissance .practice{border:2px solid #b99a64;border-radius:8px;box-shadow:0 5px 12px rgba(67,49,26,.11)}
-body.theme-renaissance .practice.stretch{background:#d8e0ca;color:#30472f}.theme-renaissance .practice.meditate{background:#d8d7c7;color:#38454a}.theme-renaissance .practice.run-warm{background:#e7c98f;color:#5b3c24}.theme-renaissance .practice.run-cool{background:#c7d6ce;color:#30483f}
-body.theme-renaissance .bottom-nav{background:rgba(244,236,216,.97);border-color:#b99a64;border-radius:8px}
-body.theme-renaissance .bottom-nav button.active{background:#dfd0ad;color:#5b3c24}
-body.theme-renaissance .affirmation{background-image:url("../assets/illustrations/landscape.svg");filter:saturate(.72) sepia(.22);border-color:#b99a64}
-body.theme-renaissance .theme-option{background:#f7eed9;border-color:#cdbb98;border-radius:8px}
-body.theme-renaissance .theme-option.active{border-color:#8d6b34;box-shadow:0 0 0 2px #d7c29a}
-body.theme-renaissance .theme-check{color:#8a6210}
+/* Renaissance: parchment, stone, heraldry and old-world typography. */
+body.theme-renaissance{--forest:#284c67;--forest-deep:#2b3038;--sage:#756044;--leaf:#a9bdca;--sand:#e8dfc9;--paper:#f5edda;--card:#fff8e7;--ink:#292821;--muted:#5f5b50;--line:#cfc1a5;--gold:#b58a43;--sky:#a9c1d2;background:#d9d0bd!important;font-family:Georgia,"Times New Roman",serif}
+body.theme-renaissance .app{background:linear-gradient(180deg,rgba(232,223,201,.72),rgba(232,223,201,.88));}
+body.theme-renaissance .app-header{border-bottom:1px solid rgba(94,77,50,.18)}
+body.theme-renaissance .affirmation{background-image:url("../assets/illustrations/renaissance.svg");background-position:center;background-size:cover;border-color:#a99572;box-shadow:0 10px 28px rgba(73,59,36,.15)}
+body.theme-renaissance .affirmation:after{background:rgba(255,247,222,.16);box-shadow:-90px 20px 0 -30px rgba(255,247,222,.12)}
+body.theme-renaissance .affirmation span{color:#fff6dd;text-shadow:0 1px 2px #27333c}
+body.theme-renaissance .affirmation p{color:#fff8e7;text-shadow:0 2px 2px rgba(0,0,0,.35)}
+body.theme-renaissance .card{border-color:#cfc1a5;border-radius:18px;box-shadow:0 8px 22px rgba(71,59,39,.10);background:var(--card)}
+body.theme-renaissance .practice{border-color:#b9a784;border-radius:17px;box-shadow:0 7px 18px rgba(71,59,39,.11)}
+body.theme-renaissance .practice.stretch{background:#e9dfc4;color:#332f27}
+body.theme-renaissance .practice.meditate{background:#d8e1df;color:#283d45}
+body.theme-renaissance .practice.run-warm{background:#ead5ad;color:#503c23}
+body.theme-renaissance .practice.run-cool{background:#d4dfdb;color:#29473f}
+body.theme-renaissance .primary{background:#284c67;border-color:#203d54;color:#fff8e7;box-shadow:0 6px 14px rgba(40,76,103,.18)}
+body.theme-renaissance .secondary{background:#efe4cc;border-color:#b9a784;color:#332f27}
+body.theme-renaissance .pill,.theme-renaissance .segmented,.theme-renaissance .day{background:#ece2ca;color:#554b3d}
+body.theme-renaissance .segmented button{color:#655b4d}
+body.theme-renaissance .segmented button.active{background:#fff8e7;color:#284c67}
+body.theme-renaissance .choice.active,body.theme-renaissance .lengths button.active,body.theme-renaissance .muscles label.selected{background:#e4dcc7;border-color:#b58a43;color:#332f27}
+body.theme-renaissance .bottom-nav{background:rgba(245,237,218,.97);border-color:#c4b697}
+body.theme-renaissance .bottom-nav button.active{color:#284c67;background:#e4dcc7}
+body.theme-renaissance .side-quest-envelope{border-color:#9c773e;box-shadow:0 4px 12px rgba(72,52,24,.16)}
+body.theme-renaissance .side-quest-envelope .envelope-body{background:#fff4d9;border-color:#9c773e}
+body.theme-renaissance .side-quest-envelope .envelope-flap{background:#ead8b0;border-bottom-color:#9c773e}
+body.theme-renaissance .side-quest-envelope .envelope-seal{background:#9c2f2f;color:#fff4d9}
+body.theme-renaissance .envelope-count{background:#9c2f2f}
+body.theme-renaissance .support-icon{background:#b58a43;color:#fff8e7}
+body.theme-renaissance .support-link{background:#284c67;border-color:#203d54;color:#fff8e7}
+body.theme-renaissance .theme-option.active{border-color:#9c773e;box-shadow:0 0 0 2px rgba(156,119,62,.18)}
 
-/* Inferno: very dark, ember-lit and intentionally dramatic. */
-body.theme-hell{
-  --forest:#e06b35;--forest-deep:#f1c48e;--sage:#c77c52;--leaf:#74322b;--sand:#100d0e;--paper:#1a1516;--card:#211a1b;--ink:#f5e9dd;--muted:#d0b8a9;--line:#5a3a35;--sky:#302021;--gold:#e0a43a;--focus:#f0b24d;
-  background:radial-gradient(circle at 50% -20%,#3a1b18 0,#100d0e 58%,#090708 100%)!important;color:var(--ink);
-}
-body.theme-hell .app{color:var(--ink)}
-body.theme-hell h1,body.theme-hell h2,body.theme-hell .brand-name{color:var(--forest-deep)}
-body.theme-hell .card{background:linear-gradient(145deg,#241a1b,#181213);border-color:#5a3a35;box-shadow:0 12px 30px rgba(0,0,0,.38)}
-body.theme-hell .muted{color:#d0b8a9!important}
-body.theme-hell .eyebrow{color:#df9468}
-body.theme-hell .practice{border-color:#69413a;box-shadow:0 7px 18px rgba(0,0,0,.35)}
-body.theme-hell .practice.stretch{background:#293322;color:#dce9bd}.theme-hell .practice.meditate{background:#242d30;color:#cbe2df}.theme-hell .practice.run-warm{background:#47301e;color:#f1c68d}.theme-hell .practice.run-cool{background:#28322e;color:#cfe2d7}
-body.theme-hell .primary{background:#c34e2c;border-color:#ef8a43;color:#fff7ee;box-shadow:0 6px 14px rgba(0,0,0,.35)}
-body.theme-hell .secondary{background:#302326;border-color:#67443d;color:#f5e9dd}
-body.theme-hell .text-button{color:#f0a06e}
-body.theme-hell .bottom-nav{background:rgba(24,16,17,.97);border-color:#5a3a35;box-shadow:0 12px 35px rgba(0,0,0,.5)}
-body.theme-hell .bottom-nav button{color:#bda59a}body.theme-hell .bottom-nav button.active{background:#3b2425;color:#f0b24d}
-body.theme-hell .affirmation{background-image:linear-gradient(145deg,rgba(40,12,10,.62),rgba(8,6,7,.48)),url("../assets/illustrations/landscape.svg");filter:saturate(1.25) contrast(1.05) sepia(.25);border-color:#6c3c34}
-body.theme-hell .affirmation span{color:#ffd1a6}body.theme-hell .affirmation p{color:#fff5ec}
-body.theme-hell .theme-option{background:#211a1b;border-color:#5a3a35;color:#f5e9dd}.theme-hell .theme-option small{color:#d0b8a9!important}.theme-hell .theme-option.active{border-color:#d06b3d;box-shadow:0 0 0 2px #542b27}.theme-hell .theme-check{color:#f0b24d}
-body.theme-hell .pill{background:#322426;color:#e3c9bb}
-body.theme-hell .week .day{background:#2b2223;color:#bfa79c}.theme-hell .day.done{background:#303b2a;color:#cfe1ae}.theme-hell .day.today{border-color:#d47743;color:#f5e9dd}
-body.theme-hell .totals-grid>div{background:#261d1e;border-color:#5a3a35}.theme-hell .totals-grid span{color:#d0b8a9}.theme-hell .totals-grid strong{color:#f1c48e}
+/* Inferno: near-black surfaces, lava light and high-contrast type. */
+body.theme-inferno{--forest:#f15a28;--forest-deep:#f4d2a5;--sage:#d99058;--leaf:#8d3b2b;--sand:#110d0f;--paper:#1b1416;--card:#21191b;--ink:#f6ead9;--muted:#d2b8a4;--line:#5b3430;--gold:#f2b35b;--sky:#2b2022;background:#0f0b0d!important;color:var(--ink)}
+body.theme-inferno .app{background:radial-gradient(circle at 50% 0,rgba(128,27,22,.22),transparent 40%)}
+body.theme-inferno .app-header{border-bottom:1px solid rgba(242,179,91,.16)}
+body.theme-inferno .affirmation{background-image:url("../assets/illustrations/inferno.svg");background-position:center;background-size:cover;border-color:#783a30;box-shadow:0 10px 28px rgba(0,0,0,.32)}
+body.theme-inferno .affirmation:after{background:rgba(255,128,62,.08);box-shadow:-90px 20px 0 -30px rgba(255,174,76,.08)}
+body.theme-inferno .affirmation span{color:#ffd4a5;text-shadow:0 1px 2px #000}
+body.theme-inferno .affirmation p{color:#fff2df;text-shadow:0 2px 3px #000}
+body.theme-inferno h1,body.theme-inferno h2,body.theme-inferno .brand-name,body.theme-inferno .brand-copy h1{color:#ffe0b8}
+body.theme-inferno .card{background:var(--card);border-color:#5b3430;border-radius:18px;box-shadow:0 10px 28px rgba(0,0,0,.28)}
+body.theme-inferno .practice{border-color:#6d3a32;box-shadow:0 8px 20px rgba(0,0,0,.24)}
+body.theme-inferno .practice.stretch{background:#33201d;color:#ffe1c0}
+body.theme-inferno .practice.meditate{background:#20262a;color:#dce9e6}
+body.theme-inferno .practice.run-warm{background:#42241c;color:#ffd5aa}
+body.theme-inferno .practice.run-cool{background:#26302e;color:#dce9e6}
+body.theme-inferno .primary{background:#b83a20;border-color:#f06a3a;color:#fff5e9;box-shadow:0 6px 16px rgba(217,72,36,.25)}
+body.theme-inferno .secondary{background:#2b2022;border-color:#69403a;color:#f6ead9}
+body.theme-inferno .danger{background:#3a1c1b;border-color:#8a4035;color:#ffd2c1}
+body.theme-inferno .pill{background:#332426;color:#efc7aa}
+body.theme-inferno .segmented{background:#2a2021}
+body.theme-inferno .segmented button{color:#c8aa98}
+body.theme-inferno .segmented button.active{background:#47302b;color:#ffd7ad}
+body.theme-inferno .choice,body.theme-inferno .lengths button,body.theme-inferno .meditation-list button,body.theme-inferno .muscles label,body.theme-inferno .theme-option{background:#241b1d;border-color:#5b3430;color:#f6ead9}
+body.theme-inferno .choice small,body.theme-inferno .lengths span,body.theme-inferno .meditation-list span,body.theme-inferno .theme-option small{color:#d2b8a4!important}
+body.theme-inferno .choice.active,body.theme-inferno .lengths button.active,body.theme-inferno .muscles label.selected{background:#382320;border-color:#d45b34;color:#ffe0bd}
+body.theme-inferno .bottom-nav{background:rgba(27,20,22,.97);border-color:#5b3430;box-shadow:0 12px 35px rgba(0,0,0,.5)}
+body.theme-inferno .bottom-nav button{color:#c9a99a}
+body.theme-inferno .bottom-nav button.active{color:#ffb276;background:#382320}
+body.theme-inferno .day{background:#2a2021;color:#ad9385}
+body.theme-inferno .day.done{background:#3b2923;color:#ffae72}
+body.theme-inferno .day.today{border-color:#d45b34;color:#f6ead9}
+body.theme-inferno .side-quest-envelope{border-color:#c75b34;background:#201718;box-shadow:0 4px 14px rgba(0,0,0,.35)}
+body.theme-inferno .side-quest-envelope .envelope-body{background:#2b2020;border-color:#a74a31}
+body.theme-inferno .side-quest-envelope .envelope-flap{background:#3b2522;border-bottom-color:#a74a31}
+body.theme-inferno .side-quest-envelope .envelope-seal{background:#b83a20;color:#fff0dd}
+body.theme-inferno .envelope-count{background:#b83a20}
+body.theme-inferno .support-icon{background:#b83a20;color:#fff1dd}
+body.theme-inferno .support-link{background:#b83a20;border-color:#f06a3a;color:#fff5e9}
+body.theme-inferno .theme-option.active{border-color:#d45b34;box-shadow:0 0 0 2px rgba(212,91,52,.2)}
+body.theme-inferno .support-card .muted{color:#d2b8a4!important}
 
-/* Envelope: a small wax-sealed letter that inherits the active palette. */
-.side-quest-envelope{width:52px;height:44px;border:2px solid var(--forest-deep);background:var(--card);border-radius:9px;box-shadow:0 5px 14px rgba(26,40,32,.18);overflow:visible;transition:transform .16s ease,box-shadow .16s ease}
-.side-quest-envelope:hover{transform:translateY(-2px);box-shadow:0 8px 18px rgba(26,40,32,.23)}
-.envelope-body{inset:7px 5px 5px;background:var(--paper);border:1px solid var(--line);border-radius:5px}
-.envelope-flap{left:6px;right:6px;top:7px;height:20px;background:var(--leaf);border-bottom:1px solid var(--forest-deep);opacity:.95}
-.envelope-seal{top:15px;width:15px;height:15px;background:var(--gold);color:#fff8e8;border:2px solid var(--card);font-size:8px;box-shadow:0 1px 4px rgba(0,0,0,.2)}
-.envelope-count{background:var(--forest);border:1px solid var(--card);color:#fff;font-size:10px}
-body.theme-renaissance .side-quest-envelope{border-color:#8d6b34;background:#eadbbd;border-radius:6px}.theme-renaissance .envelope-body{background:#f7edd7;border-color:#b99a64}.theme-renaissance .envelope-flap{background:#c7a86b;border-color:#7b5a29}.theme-renaissance .envelope-seal{background:#9b2020}.theme-renaissance .envelope-count{background:#5b3c24}
-body.theme-hell .side-quest-envelope{border-color:#b65338;background:#291a1b;box-shadow:0 5px 18px rgba(0,0,0,.5)}.theme-hell .envelope-body{background:#1c1516;border-color:#69413a}.theme-hell .envelope-flap{background:#5a2928;border-color:#d06b3d}.theme-hell .envelope-seal{background:#e06b35}.theme-hell .envelope-count{background:#d05232}
+/* Theme-aware session screens */
+body.theme-renaissance .session{background:linear-gradient(180deg,#2f4d64,#1e3345);color:#fff8e7}
+body.theme-renaissance .session-progress{background:#4c6577}.theme-renaissance .session-progress i{background:#e5c785}
+body.theme-renaissance .timer-ring{background:conic-gradient(#e5c785 var(--turn),#405d70 0)}
+body.theme-renaissance .timer-ring:after{background:#27465e}
+body.theme-renaissance .side-note,body.theme-renaissance .instructions>div{background:#3b5669;border-color:#587184}
+body.theme-renaissance .instructions p,body.theme-renaissance .mistake p{color:#fff8e7}
+body.theme-renaissance .mistake{background:#51412e;border-color:#75613e}
+body.theme-inferno .session{background:linear-gradient(180deg,#281416,#0e0a0c);color:#fff0df}
+body.theme-inferno .session-progress{background:#422426}.theme-inferno .session-progress i{background:#f56a34}
+body.theme-inferno .timer-ring{background:conic-gradient(#f56a34 var(--turn),#422426 0)}
+body.theme-inferno .timer-ring:after{background:#1b1113}
+body.theme-inferno .side-note,body.theme-inferno .instructions>div{background:#2b1b1d;border-color:#63342f}
+body.theme-inferno .instructions p,body.theme-inferno .mistake p{color:#fff0df}
+body.theme-inferno .mistake{background:#3b2420;border-color:#704035}
+body.theme-inferno .instructions strong{color:#ffbd87}
+body.theme-inferno .mistake strong{color:#ffd08e}
 
-/* Support card / Buy Me a Coffee link */
-.support-card{overflow:hidden}.coffee-link{display:grid;grid-template-columns:42px 1fr auto;align-items:center;gap:12px;padding:13px 14px;border:1px solid var(--line);border-radius:14px;background:var(--paper);color:var(--ink);text-decoration:none;margin-top:14px;transition:transform .15s ease,box-shadow .15s ease}
-.coffee-link:hover{transform:translateY(-1px);box-shadow:0 6px 16px rgba(26,58,44,.12)}.coffee-icon{width:38px;height:38px;border-radius:11px;display:grid;place-items:center;background:var(--leaf);color:var(--forest-deep);font-size:21px}.coffee-link strong,.coffee-link small{display:block}.coffee-link small{margin-top:2px;color:var(--muted)}.coffee-arrow{font-size:20px;color:var(--forest)}
-body.theme-renaissance .coffee-link{background:#eadfca;border-color:#b99a64}.theme-renaissance .coffee-icon{background:#c7a86b;color:#30251e}.theme-renaissance .coffee-arrow{color:#704c16}
-body.theme-hell .coffee-link{background:#2a1e1f;border-color:#69413a}.theme-hell .coffee-icon{background:#6b2e29;color:#ffd3ae}.theme-hell .coffee-link small{color:#d0b8a9}.theme-hell .coffee-arrow{color:#f0a06e}
-
-/* Contrast hardening for the lighter surfaces used throughout the app. */
-.practice.stretch{color:#173d30}.practice.meditate{color:#244d50}.practice.run-warm{color:#5b4524}.practice.run-cool{color:#244e42}
-.day{color:#4d5f57}.day.done{color:#24543f}.pill{color:#304f42}.segmented button{color:#4d5c55}.anchors>div{color:#465950}.anchors>div.current{color:#24543f}
-.theme-option small{color:var(--muted)!important}.theme-option{color:var(--ink)}
-
+@media(max-width:560px){.support-card{grid-template-columns:48px 1fr;gap:12px}.support-icon{width:48px;height:48px;font-size:23px}.support-link{font-size:13px}.theme-option{grid-template-columns:42px 1fr auto}}
