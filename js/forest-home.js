@@ -12,6 +12,19 @@
     document.querySelectorAll('.splash-title').forEach(function(el){el.remove();});
   }
 
+  function ensureForestBackground(){
+    if(!document.body.classList.contains('theme-forest')) return;
+    var bg=document.querySelector('.forest-fixed-background');
+    if(!bg){
+      bg=document.createElement('img');
+      bg.className='forest-fixed-background';
+      bg.alt='';
+      bg.setAttribute('aria-hidden','true');
+      bg.src='assets/illustrations/forest-bg-portrait.jpg';
+      document.body.insertBefore(bg,document.body.firstChild);
+    }
+  }
+
   function enhanceHome(){
     if(!document.body.classList.contains('theme-forest')) return;
     var actions=document.querySelector('.home-actions');
@@ -66,6 +79,7 @@
 
   function enhance(){
     wireForestLogo();
+    ensureForestBackground();
     enhanceHome();
     enhanceMeditation();
     enhanceAbout();
