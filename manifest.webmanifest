@@ -9,7 +9,7 @@
   "background_color": "#102f25",
   "theme_color": "#174b38",
   "icons": [
-    {"src":"assets/icons/small-steps-forest-logo-192.png","sizes":"192x192","type":"image/png","purpose":"any maskable"},
-    {"src":"assets/icons/small-steps-forest-logo-512.png","sizes":"512x512","type":"image/png","purpose":"any maskable"}
+    {"src":"assets/icons/small-steps-forest-logo.svg","sizes":"192x192","type":"image/svg+xml","purpose":"any maskable"},
+    {"src":"assets/icons/small-steps-forest-logo.svg","sizes":"512x512","type":"image/svg+xml","purpose":"any maskable"}
   ]
 }
