@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="520" height="180" viewBox="0 0 520 180" role="img" aria-labelledby="title desc">
+  <title id="title">Small Steps</title>
+  <desc id="desc">A crisp pixel-art forest path icon beside the Small Steps wordmark.</desc>
+  <g shape-rendering="crispEdges">
+    <rect x="8" y="8" width="164" height="164" rx="28" fill="#f7edcf" stroke="#d8b95a" stroke-width="6"/>
+    <rect x="31" y="31" width="118" height="118" rx="18" fill="#8cc4d5"/>
+    <rect x="31" y="31" width="118" height="34" fill="#4f9567"/>
+    <rect x="31" y="49" width="118" height="16" fill="#2f6d4c"/>
+    <rect x="42" y="43" width="18" height="24" fill="#24563d"/>
+    <rect x="120" y="38" width="18" height="29" fill="#24563d"/>
+    <rect x="67" y="35" width="19" height="22" fill="#6eae62"/>
+    <rect x="91" y="45" width="21" height="20" fill="#79b76a"/>
+    <rect x="43" y="70" width="30" height="24" fill="#dbe8c2"/>
+    <rect x="112" y="70" width="29" height="24" fill="#dbe8c2"/>
+    <rect x="70" y="68" width="42" height="18" fill="#dbe8c2"/>
+    <rect x="45" y="90" width="22" height="12" fill="#6a9d65"/>
+    <rect x="119" y="91" width="20" height="12" fill="#6a9d65"/>
+    <path d="M88 78h18v11h9v12h10v12h9v17H72v-17h10v-12h8v-12h-2z" fill="#c48c4c"/>
+    <path d="M94 83h8v10h8v10h7v10h8v11h-10v-10h-9v-10h-8v-10h-8v-9z" fill="#f1c66a"/>
+    <rect x="50" y="112" width="16" height="16" fill="#3f7b52"/>
+    <rect x="128" y="111" width="12" height="18" fill="#3f7b52"/>
+    <rect x="48" y="132" width="10" height="10" fill="#fff6d9"/>
+    <rect x="132" y="131" width="10" height="10" fill="#fff6d9"/>
+  </g>
+  <g fill="#fff5d8" font-family="Courier New, monospace" font-weight="900">
+    <text x="202" y="88" font-size="52" letter-spacing="-3">Small</text>
+    <text x="202" y="139" font-size="52" letter-spacing="-3">Steps</text>
+  </g>
+  <rect x="203" y="151" width="196" height="5" fill="#d8b95a"/>
+</svg>
