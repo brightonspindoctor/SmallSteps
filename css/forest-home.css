@@ -3,26 +3,19 @@ html,body{min-height:100%}
 body.theme-forest{background:#062f23 url("../assets/illustrations/forest-bg-portrait.jpg") center top/cover fixed no-repeat;overflow-x:hidden}
 body.theme-forest:after{content:"";position:fixed;z-index:0;inset:0;pointer-events:none;background:linear-gradient(180deg,rgba(3,31,23,.05) 0%,rgba(3,31,23,.02) 48%,rgba(3,31,23,.26) 76%,rgba(3,31,23,.68) 100%)}
 body.theme-forest .app{position:relative;z-index:1;isolation:isolate;width:100%;max-width:none;margin:0;min-height:100dvh;padding:12px max(16px,env(safe-area-inset-left)) calc(124px + env(safe-area-inset-bottom)) max(16px,env(safe-area-inset-right));overflow:visible;background:transparent;border:0;border-radius:0;box-shadow:none}
-
-/* The home backdrop is now the body itself, so it cannot disappear behind the app canvas. */
 body.theme-forest .forest-home-backdrop{display:none!important}
 body.theme-forest .app-header,body.theme-forest .screen{position:relative;z-index:2}
-
-/* Header */
 body.theme-forest .app-header{display:flex;align-items:center;justify-content:space-between;gap:14px;margin:0 -2px;padding:7px 2px 10px;background:transparent;border:0}
-body.theme-forest .app-brand-lockup{gap:11px;min-width:0}
-body.theme-forest .brand-mark-small{width:54px;height:54px;flex:0 0 54px;border-radius:13px;border:2px solid #e6c55e;object-fit:cover;background:#123f30;box-shadow:0 4px 14px rgba(0,0,0,.34)}
-body.theme-forest .brand-name{font-family:"Courier New",monospace;font-size:clamp(22px,3vw,29px);font-weight:900;letter-spacing:-1.3px;color:#fff5d8;text-shadow:2px 2px 0 #173b2c,0 3px 8px rgba(0,0,0,.55)}
+/* Header is deliberately text-only: no mini logo beside Small Steps. */
+body.theme-forest .app-brand-lockup{gap:0;min-width:0}
+body.theme-forest .brand-mark-small{display:none!important}
+body.theme-forest .brand-name{font-family:"Courier New",monospace;font-size:clamp(24px,3vw,30px);font-weight:900;letter-spacing:-1.3px;color:#fff5d8;text-shadow:2px 2px 0 #173b2c,0 3px 8px rgba(0,0,0,.55)}
 body.theme-forest .header-actions{display:flex;align-items:center;margin-left:auto;gap:0}
 body.theme-forest .header-gear{display:none!important}
-
-/* Happenings: only the envelope artwork is visible. No wrapper, button box or badge box. */
 body.theme-forest .home-quest-slot{display:contents!important;background:transparent!important;border:0!important;box-shadow:none!important;padding:0!important;margin:0!important}
 body.theme-forest .side-quest-envelope{position:relative;width:64px;height:58px;background:transparent!important;border:0!important;box-shadow:none!important;padding:0!important;margin:0!important;overflow:visible;border-radius:0;cursor:pointer}
 body.theme-forest .side-quest-envelope img{width:64px;height:64px;object-fit:contain;display:block;filter:drop-shadow(0 3px 5px rgba(0,0,0,.38));transform:translateY(-3px)}
 body.theme-forest .side-quest-envelope .envelope-count{position:absolute;right:2px;bottom:2px;min-width:17px;height:17px;padding:0 3px;display:grid;place-items:center;border-radius:50%;background:#a34d3c;color:#fff7df;border:1px solid #f0d27a;font:900 10px/1 "Courier New",monospace;box-shadow:0 2px 4px rgba(0,0,0,.3)}
-
-/* Home actions — kept in normal flow so the new Baseline button cannot collide with the weekly card or artwork. */
 body.theme-forest .home-actions{position:relative;z-index:3;display:grid;gap:13px;width:min(720px,calc(100% - 24px));margin:clamp(120px,26vh,275px) auto 0}
 body.theme-forest .home-action{position:relative;min-height:78px;width:100%;display:grid;grid-template-columns:1fr auto;align-items:center;gap:16px;text-align:left;padding:14px 22px;background:linear-gradient(180deg,#fff8df 0%,#f0ddb0 100%);border:2px solid #d9bd70;border-radius:11px;box-shadow:0 5px 0 #574b30,0 12px 24px rgba(0,0,0,.28);color:#173d2e;transition:transform .12s ease,filter .12s ease}
 body.theme-forest .home-action:active{transform:translateY(2px);box-shadow:0 3px 0 #574b30,0 8px 16px rgba(0,0,0,.25)}
@@ -33,8 +26,6 @@ body.theme-forest .home-action-icon{display:none!important}
 body.theme-forest .home-action.baseline-due{box-shadow:0 0 0 2px #f1d58d,0 5px 0 #574b30,0 12px 24px rgba(0,0,0,.28)}
 body.theme-forest .home-action.baseline-due:after{content:"✦";position:absolute;right:48px;color:#d4a943;font-size:18px;animation:sparkle 1.4s ease-in-out infinite}
 body.theme-forest .week-card{position:relative;z-index:3;margin-top:16px}
-
-/* Forest parchment treatment for internal screens. */
 body.theme-forest .screen>.card,body.theme-forest .screen .card{background:rgba(255,248,223,.97);border-color:#d2c08a;box-shadow:0 8px 22px rgba(20,50,35,.18);border-radius:14px;color:#173d2e}
 body.theme-forest .screen h1,body.theme-forest .screen h2{color:#173d2e}
 body.theme-forest .screen .muted{color:#59685f!important}
@@ -42,24 +33,16 @@ body.theme-forest .segmented,body.theme-forest .choice,body.theme-forest .length
 body.theme-forest .segmented button.active,body.theme-forest .choice.active,body.theme-forest .lengths button.active,body.theme-forest .meditation-list button.active{background:#e2eedf;border-color:#6e987d;color:#173d2e}
 body.theme-forest .primary{background:#174b38;border-color:#174b38;color:#fff5d8}
 body.theme-forest .secondary{background:#f5eacb;border-color:#c9b982;color:#173d2e}
-
-/* Meditation sound — compact selector only, with no descriptions. */
 body.theme-forest .meditation-sound-control{margin-top:14px}
 body.theme-forest .sound-select-label{display:block;font-weight:800;color:#173d2e;margin-bottom:8px}
 body.theme-forest .meditation-sound-select{width:100%;min-height:52px;padding:12px 42px 12px 14px;border:2px solid #bda96c;border-radius:10px;background:#fff8e6;color:#173d2e;font-weight:800;appearance:auto}
-
-/* About: a simple Buy Me a Coffee link, not a card. */
 body.theme-forest .about-support-link{margin:18px 2px 22px}
 body.theme-forest .about-support-link .support-link{display:inline-flex;align-items:center;gap:7px;padding:0;background:none!important;border:0!important;border-radius:0;color:#f4d36c;text-decoration:underline;font-weight:900;font-size:16px;box-shadow:none!important}
-
-/* Bottom navigation */
 body.theme-forest .bottom-nav{z-index:50;left:50%;bottom:max(10px,env(safe-area-inset-bottom));transform:translateX(-50%);width:min(calc(100% - 28px),760px);display:grid;grid-template-columns:repeat(3,1fr);gap:4px;background:rgba(5,48,35,.97);border:2px solid #7a6737;padding:6px;border-radius:19px;box-shadow:0 12px 35px rgba(0,0,0,.34)}
 body.theme-forest .bottom-nav button{min-height:60px;border:0;background:transparent;color:#dce4dc;border-radius:13px;padding:7px 5px;font-size:11px;font-weight:800}
 body.theme-forest .bottom-nav button:nth-child(2){display:none!important}
 body.theme-forest .bottom-nav button.active{background:#15513c;color:#f0c956;box-shadow:inset 0 0 0 1px rgba(125,177,148,.42)}
 body.theme-forest .bottom-nav button span{font-family:"Courier New",monospace;font-size:21px;margin-bottom:3px}
-
-/* Opening screen — cleaner wordmark, with no duplicated title. */
 body.theme-forest .simple-begin-screen{position:relative;display:grid;align-content:center;justify-items:center;gap:34px;min-height:100dvh;overflow:hidden;background:url("../assets/illustrations/forest-bg-portrait.jpg") center/cover no-repeat;padding:30px 20px}
 body.theme-forest .simple-begin-screen:before{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(5,37,28,.16),rgba(5,37,28,.58))}
 body.theme-forest .simple-begin-screen>*{position:relative;z-index:1}
@@ -67,21 +50,16 @@ body.theme-forest .simple-begin-logo{display:block;width:min(420px,86vw);height:
 body.theme-forest .splash-brand{display:grid;justify-items:center;gap:0}
 body.theme-forest .splash-title{display:none!important}
 body.theme-forest .simple-begin-button{min-width:190px;background:#174b38;border:2px solid #e0c15c;box-shadow:0 4px 0 #0b2e21;color:#fff5d8}
-
-/* Onboarding name screen: cream card and dark text, never green-on-green. */
 body.theme-forest .onboarding-shell{position:relative;z-index:2;min-height:100dvh;display:grid;place-items:center;padding:28px 18px;background:transparent}
 body.theme-forest .onboarding-card{width:min(560px,100%);padding:clamp(26px,5vw,46px);background:rgba(255,248,223,.98);border:2px solid #d2c08a;border-radius:16px;box-shadow:0 12px 35px rgba(0,0,0,.3);color:#173d2e}
 body.theme-forest .onboarding-card h1,body.theme-forest .onboarding-card .eyebrow{color:#173d2e!important;text-shadow:none!important}
 body.theme-forest .onboarding-card .field span,body.theme-forest .onboarding-card label{color:#31503f!important;text-shadow:none!important}
 body.theme-forest .onboarding-card input:not([type="range"]):not([type="checkbox"]):not([type="radio"]){background:#fff8e6!important;color:#173d2e!important;border:2px solid #bda96c!important;border-radius:11px!important;caret-color:#173d2e!important}
 body.theme-forest .onboarding-card input:not([type="range"]):not([type="checkbox"]):not([type="radio"])::placeholder{color:#6b756c!important;opacity:1}
-
 @keyframes sparkle{50%{transform:scale(1.2);opacity:.55}}
-
 @media(max-width:560px){
  body.theme-forest .app{padding-left:10px;padding-right:10px;padding-top:8px}
  body.theme-forest .app-header{margin-left:0;margin-right:0;padding:5px 2px 8px}
- body.theme-forest .brand-mark-small{width:48px;height:48px;flex-basis:48px}
  body.theme-forest .brand-name{font-size:22px}
  body.theme-forest .side-quest-envelope{width:56px;height:50px}
  body.theme-forest .side-quest-envelope img{width:56px;height:56px}
