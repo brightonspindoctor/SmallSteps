@@ -4,7 +4,7 @@ body.theme-forest .app{position:relative;isolation:isolate;min-height:100dvh;pad
 body.theme-forest .app:before{content:"";position:fixed;z-index:-2;inset:0;background:url("../assets/illustrations/forest-theme1-bg.webp") center center/cover no-repeat;image-rendering:auto;pointer-events:none}
 body.theme-forest .app:after{content:"";position:fixed;z-index:-1;inset:0;background:linear-gradient(180deg,rgba(4,35,27,.22),rgba(4,35,27,.08) 36%,rgba(4,35,27,.48));pointer-events:none}
 body.theme-forest .app-header{background:linear-gradient(180deg,rgba(4,35,27,.82),rgba(4,35,27,.08));margin:0 -14px;padding:9px 14px 14px;border:0}
-body.theme-forest .brand-mark-small{width:48px;height:48px;border-radius:11px;border:2px solid #e0c15c;object-fit:cover;background:#123f30;box-shadow:0 4px 12px rgba(0,0,0,.3)}
+body.theme-forest .brand-mark-small{width:48px;height:48px;border-radius:11px;border:2px solid #e0c15c;object-fit:cover;background:#123f30;box-shadow:0 4px 12px rgba(0,0,0,.3);content:url("../assets/icons/small-steps-forest-logo.svg")}
 body.theme-forest .brand-name{font-family:"Courier New",monospace;font-size:23px;font-weight:900;letter-spacing:-1.2px;color:#fff5d6;text-shadow:1px 1px 0 #173b2c,0 2px 5px rgba(0,0,0,.45)}
 body.theme-forest .header-actions{display:flex;align-items:center;margin-left:auto}
 body.theme-forest .home-quest-slot{margin-left:0}
@@ -29,7 +29,7 @@ body.theme-forest .side-quest-envelope .envelope-count{background:#174b38;color:
 body.theme-forest .simple-begin-screen{position:relative;min-height:100dvh;overflow:hidden;background:url("../assets/illustrations/forest-theme1-bg.webp") center/cover no-repeat}
 body.theme-forest .simple-begin-screen:before{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(5,37,28,.2),rgba(5,37,28,.55))}
 body.theme-forest .simple-begin-screen>*{position:relative;z-index:1}
-body.theme-forest .simple-begin-logo{width:min(220px,55vw);border-radius:30px;border:3px solid #e0c15c;box-shadow:0 12px 35px rgba(0,0,0,.35)}
+body.theme-forest .simple-begin-logo{width:min(220px,55vw);border-radius:30px;border:3px solid #e0c15c;box-shadow:0 12px 35px rgba(0,0,0,.35);content:url("../assets/icons/small-steps-forest-logo.svg")}
 body.theme-forest .splash-brand{display:grid;justify-items:center;gap:14px}
 body.theme-forest .splash-title{color:#fff5d6;font-family:"Courier New",monospace;font-size:34px;font-weight:900;letter-spacing:-1px;text-shadow:2px 2px 0 #173b2c,0 3px 8px rgba(0,0,0,.5)}
 body.theme-forest .simple-begin-button{background:#174b38;border:2px solid #e0c15c;box-shadow:0 4px 0 #0b2e21;color:#fff5d8}
