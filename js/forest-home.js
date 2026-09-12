@@ -1,10 +1,15 @@
 /* Small Steps — Forest presentation helpers */
 (function(){
   function wireForestLogo(){
-    document.querySelectorAll('.brand-mark-small,.simple-begin-logo').forEach(function(img){
+    document.querySelectorAll('.brand-mark-small').forEach(function(img){
       img.setAttribute('src','assets/icons/small-steps-forest-logo.webp');
       img.removeAttribute('srcset');
     });
+    document.querySelectorAll('.simple-begin-logo').forEach(function(img){
+      img.setAttribute('src','assets/icons/small-steps-opening-logo.svg');
+      img.removeAttribute('srcset');
+    });
+    document.querySelectorAll('.splash-title').forEach(function(el){el.remove();});
   }
 
   function enhanceHome(){
@@ -34,21 +39,16 @@
     var current=(active&&active.querySelector('strong')&&active.querySelector('strong').textContent)||'Soft chime';
     var wrap=document.createElement('div');
     wrap.className='meditation-sound-control';
-    wrap.innerHTML='<label class="sound-select-label" for="meditationSound">Ending sound</label><select id="meditationSound" class="meditation-sound-select"><option value="chime">Soft chime</option><option value="gong">Gong</option><option value="bell">Temple bell</option></select><p class="muted sound-description"></p>';
+    wrap.innerHTML='<label class="sound-select-label" for="meditationSound">Ending sound</label><select id="meditationSound" class="meditation-sound-select"><option value="chime">Soft chime</option><option value="gong">Gong</option><option value="bell">Temple bell</option></select>';
     list.style.display='none';
     var eyebrow=card.querySelector('.eyebrow');
     (eyebrow?eyebrow.parentNode:card).appendChild(wrap);
     var select=wrap.querySelector('select');
-    var desc=wrap.querySelector('.sound-description');
-    var descriptions={chime:'A light, bright finish.',gong:'A deeper resonant ending.',bell:'A clear, sustained bell.'};
     var map={'Soft chime':'chime','Gong':'gong','Temple bell':'bell'};
     select.value=map[current]||'chime';
-    desc.textContent=descriptions[select.value];
     select.addEventListener('change',function(){
-      var value=select.value;
-      state.profile.sound=value;
+      state.profile.sound=select.value;
       save();
-      desc.textContent=descriptions[value];
     });
   }
 
