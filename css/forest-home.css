@@ -2,11 +2,11 @@
 html,body{min-height:100%}
 body.theme-forest{background:#062f23 url("../assets/illustrations/forest-bg-portrait.jpg") center top/cover fixed no-repeat;overflow-x:hidden}
 body.theme-forest:after{content:"";position:fixed;z-index:0;inset:0;pointer-events:none;background:linear-gradient(180deg,rgba(3,31,23,.05) 0%,rgba(3,31,23,.02) 48%,rgba(3,31,23,.26) 76%,rgba(3,31,23,.68) 100%)}
+body.theme-forest .forest-fixed-background{display:block;position:fixed;z-index:0;inset:0;width:100vw;height:100dvh;object-fit:cover;object-position:center top;pointer-events:none;user-select:none}
 body.theme-forest .app{position:relative;z-index:1;isolation:isolate;width:100%;max-width:none;margin:0;min-height:100dvh;padding:12px max(16px,env(safe-area-inset-left)) calc(124px + env(safe-area-inset-bottom)) max(16px,env(safe-area-inset-right));overflow:visible;background:transparent;border:0;border-radius:0;box-shadow:none}
 body.theme-forest .forest-home-backdrop{display:none!important}
 body.theme-forest .app-header,body.theme-forest .screen{position:relative;z-index:2}
 body.theme-forest .app-header{display:flex;align-items:center;justify-content:space-between;gap:14px;margin:0 -2px;padding:7px 2px 10px;background:transparent;border:0}
-/* Header is deliberately text-only: no mini logo beside Small Steps. */
 body.theme-forest .app-brand-lockup{gap:0;min-width:0}
 body.theme-forest .brand-mark-small{display:none!important}
 body.theme-forest .brand-name{font-family:"Courier New",monospace;font-size:clamp(24px,3vw,30px);font-weight:900;letter-spacing:-1.3px;color:#fff5d8;text-shadow:2px 2px 0 #173b2c,0 3px 8px rgba(0,0,0,.55)}
