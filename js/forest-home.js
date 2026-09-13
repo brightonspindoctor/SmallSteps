@@ -95,14 +95,26 @@
 
   function enhanceAbout(){
     if(!document.body.classList.contains('theme-forest')) return;
+    if(document.querySelector('.about-panel-stack')) return;
     var card=document.querySelector('.support-card');
-    if(!card || document.querySelector('.about-support-link')) return;
+    if(!card) return;
     var link=card.querySelector('.support-link');
     if(!link) return;
-    var wrap=document.createElement('div');
-    wrap.className='about-support-link';
-    wrap.appendChild(link.cloneNode(true));
-    card.replaceWith(wrap);
+
+    var stack=document.createElement('div');
+    stack.className='about-panel-stack';
+
+    var message=document.createElement('section');
+    message.className='about-message card';
+    message.innerHTML='<p>Mighty adventures are taken one small step at a time.</p>';
+
+    var coffee=document.createElement('section');
+    coffee.className='about-coffee card';
+    coffee.appendChild(link.cloneNode(true));
+
+    stack.appendChild(message);
+    stack.appendChild(coffee);
+    card.replaceWith(stack);
   }
 
   function enhance(){
