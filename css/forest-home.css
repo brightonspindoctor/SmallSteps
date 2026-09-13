@@ -2,7 +2,7 @@
 html,body{min-height:100%}
 body.theme-forest{background:#062f23 url("../assets/illustrations/forest-bg-portrait.webp") center top/cover fixed no-repeat;overflow-x:hidden}
 body.theme-forest:after{content:"";position:fixed;z-index:0;inset:0;pointer-events:none;background:linear-gradient(180deg,rgba(3,31,23,.05) 0%,rgba(3,31,23,.02) 48%,rgba(3,31,23,.26) 76%,rgba(3,31,23,.68) 100%)}
-body.theme-forest .forest-fixed-background{display:block;position:fixed;z-index:0;inset:0;width:100vw;height:100dvh;object-fit:cover;object-position:center top;pointer-events:none;user-select:none}
+body.theme-forest .forest-fixed-background{display:block;position:fixed;z-index:0;inset:-1.5dvh -1.5vw;width:103vw;height:103dvh;object-fit:cover;object-position:52% center;pointer-events:none;user-select:none}
 body.theme-forest .app{position:relative;z-index:1;isolation:isolate;width:100%;max-width:none;margin:0;min-height:100dvh;padding:12px max(16px,env(safe-area-inset-left)) calc(124px + env(safe-area-inset-bottom)) max(16px,env(safe-area-inset-right));overflow:visible;background:transparent;border:0;border-radius:0;box-shadow:none}
 body.theme-forest .forest-home-backdrop{display:none!important}
 body.theme-forest .app-header,body.theme-forest .screen{position:relative;z-index:2}
@@ -23,7 +23,7 @@ body.theme-forest .home-action strong{font-family:"Courier New",monospace;font-s
 body.theme-forest .home-action small{display:block;margin-top:4px;font-family:Inter,system-ui,sans-serif;font-size:12px;font-weight:700;color:#5b674f}
 body.theme-forest .home-action b{font-family:Georgia,serif;font-size:36px;line-height:1;color:#164b37;font-weight:400}
 body.theme-forest .home-action-icon{display:none!important}
-body.theme-forest .home-action.baseline-due{box-shadow:0 0 0 2px #f1d58d,0 5px 0 #574b30,0 12px 24px rgba(0,0,0,.28)}
+body.theme-forest .home-action.baseline-due{border-color:#f1d58d;background:linear-gradient(180deg,#fffdf0 0%,#f4df9f 100%);box-shadow:0 0 0 3px rgba(241,213,141,.95),0 5px 0 #574b30,0 12px 24px rgba(0,0,0,.3);animation:baselinePulse 1.8s ease-in-out infinite}
 body.theme-forest .home-action.baseline-due:after{content:"✦";position:absolute;right:48px;color:#d4a943;font-size:18px;animation:sparkle 1.4s ease-in-out infinite}
 body.theme-forest .week-card{position:relative;z-index:3;margin-top:16px}
 body.theme-forest .screen>.card,body.theme-forest .screen .card{background:rgba(255,248,223,.97);border-color:#d2c08a;box-shadow:0 8px 22px rgba(20,50,35,.18);border-radius:14px;color:#173d2e}
@@ -57,6 +57,8 @@ body.theme-forest .onboarding-card .field span,body.theme-forest .onboarding-car
 body.theme-forest .onboarding-card input:not([type="range"]):not([type="checkbox"]):not([type="radio"]){background:#fff8e6!important;color:#173d2e!important;border:2px solid #bda96c!important;border-radius:11px!important;caret-color:#173d2e!important}
 body.theme-forest .onboarding-card input:not([type="range"]):not([type="checkbox"]):not([type="radio"])::placeholder{color:#6b756c!important;opacity:1}
 @keyframes sparkle{50%{transform:scale(1.2);opacity:.55}}
+@keyframes baselinePulse{0%,100%{transform:translateY(0)}50%{transform:translateY(-1px)}}
+@media(prefers-reduced-motion:reduce){body.theme-forest .home-action.baseline-due{animation:none}body.theme-forest .home-action.baseline-due:after{animation:none}}
 @media(max-width:560px){
  body.theme-forest .app{padding-left:10px;padding-right:10px;padding-top:8px}
  body.theme-forest .app-header{margin-left:0;margin-right:0;padding:5px 2px 8px}
