@@ -95,11 +95,19 @@
 
   function enhanceAbout(){
     if(!document.body.classList.contains('theme-forest')) return;
-    var card=document.querySelector('.support-card');
-    if(!card) return;
-    card.remove();
-    var stack=document.querySelector('.about-panel-stack');
-    if(stack) stack.remove();
+
+    /* Remove the old About Small Steps card regardless of which wrapper
+       class the underlying app version uses. This runs after every render. */
+    document.querySelectorAll('.support-card,.about-panel-stack').forEach(function(el){el.remove();});
+
+    document.querySelectorAll('*').forEach(function(el){
+      if(el.children.length>0) return;
+      var text=(el.textContent||'').replace(/\s+/g,' ').trim().toLowerCase();
+      if(text!=='about small steps') return;
+      var card=el.closest('.card,.panel,.support-card,.about-panel-stack');
+      if(card) card.remove();
+      else el.remove();
+    });
   }
 
   function enhance(){
