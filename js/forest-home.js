@@ -1,5 +1,12 @@
 /* Small Steps — Forest presentation helpers */
 (function(){
+  var FOREST_TIME_ASSETS={
+    sunrise:'assets/illustrations/forest-sunrise.webp',
+    day:'assets/illustrations/forest-day.webp',
+    sunset:'assets/illustrations/forest-sunset.webp',
+    night:'assets/illustrations/forest-night.webp'
+  };
+
   function wireForestLogo(){
     document.querySelectorAll('.brand-mark-small').forEach(function(img){
       img.setAttribute('src','assets/icons/small-steps-forest-logo.webp');
@@ -12,6 +19,26 @@
     document.querySelectorAll('.splash-title').forEach(function(el){el.remove();});
   }
 
+  function forestTimeOfDay(){
+    var hour=new Date().getHours();
+    if(hour>=21 || hour<6) return 'night';
+    if(hour>=6 && hour<10) return 'sunrise';
+    if(hour>=10 && hour<17) return 'day';
+    return 'sunset';
+  }
+
+  function applyForestTimeOfDay(){
+    if(!document.body.classList.contains('theme-forest')) return;
+    var period=forestTimeOfDay();
+    var src=FOREST_TIME_ASSETS[period];
+    document.querySelectorAll('.forest-fixed-background').forEach(function(img){
+      if(img.getAttribute('src')!==src) img.setAttribute('src',src);
+    });
+    document.querySelectorAll('.simple-begin-screen').forEach(function(screen){
+      screen.style.backgroundImage='url("'+src+'")';
+    });
+  }
+
   function ensureForestBackground(){
     if(!document.body.classList.contains('theme-forest')) return;
     var bg=document.querySelector('.forest-fixed-background');
@@ -20,11 +47,10 @@
       bg.className='forest-fixed-background';
       bg.alt='';
       bg.setAttribute('aria-hidden','true');
-      bg.src='assets/illustrations/forest-bg-portrait.webp';
+      bg.src=FOREST_TIME_ASSETS[forestTimeOfDay()];
       document.body.insertBefore(bg,document.body.firstChild);
-    }else if(bg.getAttribute('src')!=='assets/illustrations/forest-bg-portrait.webp'){
-      bg.setAttribute('src','assets/illustrations/forest-bg-portrait.webp');
     }
+    applyForestTimeOfDay();
   }
 
   function enhanceHome(){
@@ -85,8 +111,13 @@
     enhanceHome();
     enhanceMeditation();
     enhanceAbout();
+    applyForestTimeOfDay();
   }
   enhance();
+  setInterval(applyForestTimeOfDay,60000);
+  document.addEventListener('visibilitychange',function(){
+    if(!document.hidden) applyForestTimeOfDay();
+  });
   var observer=new MutationObserver(function(){setTimeout(enhance,0)});
   observer.observe(document.getElementById('root')||document.body,{subtree:true,childList:true});
 })();
