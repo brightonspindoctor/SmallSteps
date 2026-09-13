@@ -38,6 +38,10 @@ body.theme-forest .sound-select-label{display:block;font-weight:800;color:#173d2
 body.theme-forest .meditation-sound-select{width:100%;min-height:52px;padding:12px 42px 12px 14px;border:2px solid #bda96c;border-radius:10px;background:#fff8e6;color:#173d2e;font-weight:800;appearance:auto}
 body.theme-forest .about-support-link{margin:18px 2px 22px}
 body.theme-forest .about-support-link .support-link{display:inline-flex;align-items:center;gap:7px;padding:0;background:none!important;border:0!important;border-radius:0;color:#f4d36c;text-decoration:underline;font-weight:900;font-size:16px;box-shadow:none!important}
+body.theme-forest .forest-support-card{margin:20px auto 8px;width:min(560px,100%);padding:22px 20px;text-align:center;background:rgba(255,248,223,.97)!important;border:2px solid #d2c08a!important;border-radius:14px!important;box-shadow:0 8px 22px rgba(20,50,35,.18)!important}
+body.theme-forest .forest-support-message{margin:0 0 16px;color:#173d2e;font-family:"Courier New",monospace;font-size:clamp(16px,4.5vw,21px);font-weight:900;line-height:1.35}
+body.theme-forest .forest-coffee-link{display:inline-flex;align-items:center;justify-content:center;min-height:46px;padding:10px 18px;background:#174b38;border:2px solid #d9bd70;border-radius:9px;color:#fff5d8;text-decoration:none;font-weight:900;box-shadow:0 3px 0 #0b2e21}
+body.theme-forest .forest-coffee-link:active{transform:translateY(2px);box-shadow:0 1px 0 #0b2e21}
 body.theme-forest .bottom-nav{z-index:50;left:50%;bottom:max(10px,env(safe-area-inset-bottom));transform:translateX(-50%);width:min(calc(100% - 28px),760px);display:grid;grid-template-columns:repeat(3,1fr);gap:4px;background:rgba(5,48,35,.97);border:2px solid #7a6737;padding:6px;border-radius:19px;box-shadow:0 12px 35px rgba(0,0,0,.34)}
 body.theme-forest .bottom-nav button{min-height:60px;border:0;background:transparent;color:#dce4dc;border-radius:13px;padding:7px 5px;font-size:11px;font-weight:800}
 body.theme-forest .bottom-nav button:nth-child(2){display:none!important}
@@ -69,6 +73,8 @@ body.theme-forest .onboarding-card input:not([type="range"]):not([type="checkbox
  body.theme-forest .home-action{min-height:72px;padding:13px 18px}
  body.theme-forest .home-action strong{font-size:18px}
  body.theme-forest .home-action b{font-size:32px}
+ body.theme-forest .forest-support-card{margin-top:16px;padding:20px 16px}
+ body.theme-forest .forest-support-message{font-size:17px}
  body.theme-forest .bottom-nav{width:calc(100% - 20px)}
  body.theme-forest .simple-begin-screen{gap:28px;padding-left:14px;padding-right:14px}
  body.theme-forest .simple-begin-logo{width:min(360px,92vw)}
