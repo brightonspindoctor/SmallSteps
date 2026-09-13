@@ -1,7 +1,8 @@
-const CACHE = 'small-steps-v1.40-hd-forest-background';
+const CACHE = 'small-steps-v1.41-forest-design-system';
 const ASSETS = [
-  './','./index.html','./manifest.webmanifest','./css/base.css','./css/forest-home.css','./js/app.js','./js/forest-home.js',
-  './assets/icons/small-steps-forest-logo.webp','./assets/icons/small-steps-opening-logo.svg','./assets/illustrations/forest-bg-portrait.webp','./assets/illustrations/forest-bg-portrait.jpg','./assets/illustrations/forest-theme1-bg.webp','./assets/illustrations/happenings-envelope.svg'
+  './','./index.html','./manifest.webmanifest','./css/base.css','./css/forest-home.css','./css/forest-type.css','./js/app.js','./js/forest-home.js',
+  './assets/icons/small-steps-forest-logo.webp','./assets/icons/small-steps-opening-logo.svg','./assets/illustrations/forest-bg-portrait.webp','./assets/illustrations/forest-bg-portrait.jpg','./assets/illustrations/forest-theme1-bg.webp',
+  './assets/illustrations/forest-sunrise.webp.webp','./assets/illustrations/forest-day.webp.webp','./assets/illustrations/forest-sunset.webp.webp','./assets/illustrations/forest-night.webp.webp','./assets/illustrations/happenings-envelope.svg'
 ];
 self.addEventListener('install', event => event.waitUntil(caches.open(CACHE).then(c => c.addAll(ASSETS)).then(() => self.skipWaiting())));
 self.addEventListener('activate', event => event.waitUntil(caches.keys().then(keys => Promise.all(keys.filter(k => k !== CACHE).map(k => caches.delete(k)))).then(() => self.clients.claim())));
