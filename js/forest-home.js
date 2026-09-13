@@ -1,10 +1,10 @@
 /* Small Steps — Forest presentation helpers */
 (function(){
   var FOREST_TIME_ASSETS={
-    sunrise:'assets/illustrations/forest-sunrise.webp',
-    day:'assets/illustrations/forest-day.webp',
-    sunset:'assets/illustrations/forest-sunset.webp',
-    night:'assets/illustrations/forest-night.webp'
+    sunrise:'assets/illustrations/forest-sunrise.webp.webp',
+    day:'assets/illustrations/forest-day.webp.webp',
+    sunset:'assets/illustrations/forest-sunset.webp.webp',
+    night:'assets/illustrations/forest-night.webp.webp'
   };
 
   function wireForestLogo(){
