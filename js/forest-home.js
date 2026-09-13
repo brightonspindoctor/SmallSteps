@@ -20,8 +20,10 @@
       bg.className='forest-fixed-background';
       bg.alt='';
       bg.setAttribute('aria-hidden','true');
-      bg.src='assets/illustrations/forest-bg-portrait.jpg';
+      bg.src='assets/illustrations/forest-bg-portrait.webp';
       document.body.insertBefore(bg,document.body.firstChild);
+    }else if(bg.getAttribute('src')!=='assets/illustrations/forest-bg-portrait.webp'){
+      bg.setAttribute('src','assets/illustrations/forest-bg-portrait.webp');
     }
   }
 
