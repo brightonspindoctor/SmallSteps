@@ -1,4 +1,4 @@
-const CACHE = 'small-steps-v1.46-home-progress-clean';
+const CACHE = 'small-steps-v1.47-landing-clean';
 const ASSETS = [
   './','./index.html','./manifest.webmanifest','./css/base.css','./css/forest-home.css','./css/forest-type.css','./js/app.js','./js/forest-home.js',
   './assets/icons/small-steps-forest-logo.webp','./assets/icons/small-steps-opening-logo.svg','./assets/illustrations/forest-bg-portrait.webp','./assets/illustrations/forest-bg-portrait.jpg','./assets/illustrations/forest-theme1-bg.webp',
@@ -15,13 +15,7 @@ self.addEventListener('install', event => event.waitUntil(caches.open(CACHE).the
 self.addEventListener('activate', event => event.waitUntil(caches.keys().then(keys => Promise.all(keys.filter(k => k !== CACHE).map(k => caches.delete(k)))).then(() => self.clients.claim())));
 self.addEventListener('fetch', event => {
   if (event.request.method !== 'GET') return;
-  event.respondWith(caches.match(event.request).then(cached => {
-    if(cached) return cached;
-    return fetch(event.request).then(response => {
-      if(event.request.url.includes('/css/forest-home.css')){
-        return response.text().then(text => new Response(text + FOREST_CLEANUP,{status:response.status,statusText:response.statusText,headers:{'Content-Type':'text/css;charset=UTF-8','Cache-Control':'no-cache'}}));
-      }
-      const copy = response.clone(); caches.open(CACHE).then(c => c.put(event.request, copy)); return response;
-    }).catch(() => caches.match('./index.html'));
-  }));
+  event.respondWith(caches.match(event.request).then(cached => cached || fetch(event.request).then(response => {
+    const copy = response.clone(); caches.open(CACHE).then(c => c.put(event.request, copy)); return response;
+  }).catch(() => caches.match('./index.html'))));
 });
