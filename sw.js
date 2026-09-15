@@ -1,4 +1,4 @@
-const CACHE = 'small-steps-v1.44-more-fix';
+const CACHE = 'small-steps-v1.45-home-progress-coffee';
 const ASSETS = [
   './','./index.html','./manifest.webmanifest','./css/base.css','./css/forest-home.css','./css/forest-type.css','./js/app.js','./js/forest-home.js',
   './assets/icons/small-steps-forest-logo.webp','./assets/icons/small-steps-opening-logo.svg','./assets/illustrations/forest-bg-portrait.webp','./assets/illustrations/forest-bg-portrait.jpg','./assets/illustrations/forest-theme1-bg.webp',
