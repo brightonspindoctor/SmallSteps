@@ -47,10 +47,10 @@ body.theme-forest .bottom-nav button{min-height:60px;border:0;background:transpa
 body.theme-forest .bottom-nav button:nth-child(2){display:none!important}
 body.theme-forest .bottom-nav button.active{background:#15513c;color:#f0c956;box-shadow:inset 0 0 0 1px rgba(125,177,148,.42)}
 body.theme-forest .bottom-nav button span{font-family:"Courier New",monospace;font-size:21px;margin-bottom:3px}
-body.theme-forest .simple-begin-screen{position:relative;display:grid;align-content:center;justify-items:center;gap:34px;min-height:100dvh;overflow:hidden;background:url("../assets/illustrations/forest-bg-portrait.webp") center/cover no-repeat;padding:30px 20px}
-body.theme-forest .simple-begin-screen:before{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(5,37,28,.16),rgba(5,37,28,.58))}
+body.theme-forest .simple-begin-screen{position:relative;display:grid;align-content:center;justify-items:center;gap:34px;min-height:100dvh;overflow:hidden;background:url("../assets/illustrations/forest-bg-portrait.webp") center center/auto 112% no-repeat;padding:30px 20px}
+body.theme-forest .simple-begin-screen:before{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(5,37,28,.12),rgba(5,37,28,.5))}
 body.theme-forest .simple-begin-screen>*{position:relative;z-index:1}
-body.theme-forest .simple-begin-logo{display:block;width:min(420px,86vw);height:auto;border:0!important;border-radius:0!important;box-shadow:none!important;filter:drop-shadow(0 8px 14px rgba(0,0,0,.38))}
+body.theme-forest .simple-begin-logo{display:block;width:clamp(170px,42vw,250px);height:auto;aspect-ratio:1;border:0!important;border-radius:0!important;box-shadow:none!important;filter:drop-shadow(0 8px 14px rgba(0,0,0,.42))}
 body.theme-forest .splash-brand{display:grid;justify-items:center;gap:0}
 body.theme-forest .splash-title{display:none!important}
 body.theme-forest .simple-begin-button{min-width:190px;background:#174b38;border:2px solid #e0c15c;box-shadow:0 4px 0 #0b2e21;color:#fff5d8}
@@ -76,8 +76,8 @@ body.theme-forest .onboarding-card input:not([type="range"]):not([type="checkbox
  body.theme-forest .forest-support-card{margin-top:16px;padding:20px 16px}
  body.theme-forest .forest-support-message{font-size:17px}
  body.theme-forest .bottom-nav{width:calc(100% - 20px)}
- body.theme-forest .simple-begin-screen{gap:28px;padding-left:14px;padding-right:14px}
- body.theme-forest .simple-begin-logo{width:min(360px,92vw)}
+ body.theme-forest .simple-begin-screen{gap:28px;padding-left:14px;padding-right:14px;background-size:auto 112%;background-position:center center}
+ body.theme-forest .simple-begin-logo{width:min(250px,60vw)}
  body.theme-forest .onboarding-shell{padding:18px 12px}
  body.theme-forest .onboarding-card{padding:24px 20px}
 }
