@@ -1,0 +1,13 @@
+/* Small Steps — Forest support-card cleanup */
+body.theme-forest .support-card,
+body.theme-forest .about-support-link,
+body.theme-forest .card:has(a[href*="buymeacoffee"]),
+body.theme-forest a[href*="buymeacoffee"]{
+  display:none!important;
+}
+body.theme-forest .forest-support-card{
+  display:block!important;
+}
+body.theme-forest:has(.simple-begin-screen) .forest-support-card{
+  display:none!important;
+}
