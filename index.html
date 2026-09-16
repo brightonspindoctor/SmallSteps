@@ -16,6 +16,7 @@
 <link rel="stylesheet" href="css/base.css">
 <link rel="stylesheet" href="css/forest-home.css">
 <link rel="stylesheet" href="css/forest-type.css">
+<link rel="stylesheet" href="css/forest-landing.css">
 <title>Small Steps</title>
 </head>
 <body>
@@ -29,7 +30,7 @@
     try{console.error('Small Steps boot error:',message)}catch(_){}
   }
   window.addEventListener('error',function(e){showBootError(e && (e.message||e.error&&e.error.message) || 'Unknown error')});
-  window.addEventListener('unhandledrejection',function(e){showBootError(e && e.reason && (e.reason.message||String(e.reason)) || 'Unhandled promise rejection')});
+  window.addEventListener('unhandledrejection',function(e){showBootError(e && e.reason && (e.reason.message||String(e.reason)) || 'Unhandled error')});
   window.__natureWalkShowBootError=showBootError;
 })();
 </script>
