@@ -18,7 +18,7 @@
     document.querySelectorAll('.card,.panel,section,article').forEach(function(el){
       if(!visible(el)||el.classList.contains('forest-support-card'))return;
       var t=cleanText(el);
-      if(t==='about small steps'||t.indexOf('short stretching routines, calming meditation')===0||t.indexOf('short stretching routines')===0)el.remove();
+      if(t.indexOf('about small steps')!==-1||t.indexOf('short stretching routines, calming meditation')===0||t.indexOf('short stretching routines')===0)el.remove();
     });
     document.querySelectorAll('a[href*="buymeacoffee"]').forEach(function(link){
       if(!link.closest('.forest-support-card')){
@@ -28,10 +28,9 @@
     });
   }
   function enhanceAbout(){
-    if(!document.body.classList.contains('theme-forest'))return;
     var more=findMoreScreen();
     removeOldAbout();
-    if(!more)return;
+    if(!document.body.classList.contains('theme-forest')||!more)return;
     var existing=more.querySelector('.forest-support-card');
     if(existing)return;
     var card=document.createElement('section');
