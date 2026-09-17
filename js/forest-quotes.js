@@ -1,4 +1,4 @@
-/* Small Steps — rotating home inspiration quotes. The attributions are deliberately fictional. */
+/* Small Steps — rotating home inspiration quotes. */
 (function(){
   var QUOTES=[
     ['Small steps still move you forward.','Genghis Khan'],
@@ -27,14 +27,14 @@
     var card=document.createElement('section');
     card.className='forest-inspiration';
     card.setAttribute('aria-label','Daily inspiration');
-    card.innerHTML='<div class="forest-inspiration-label">INSPIRATION</div><blockquote>“'+q[0]+'”</blockquote><div class="forest-inspiration-attribution">— '+q[1]+'</div><div class="forest-inspiration-note">Fictional attribution</div>';
+    card.innerHTML='<div class="forest-inspiration-label">INSPIRATION</div><blockquote>“'+q[0]+'”</blockquote><div class="forest-inspiration-attribution">— '+q[1]+'</div>';
     actions.insertAdjacentElement('afterend',card);
   }
   function style(){
     if(document.getElementById('forest-quotes-style'))return;
     var s=document.createElement('style');
     s.id='forest-quotes-style';
-    s.textContent='body.theme-forest .forest-inspiration{position:relative;z-index:3;width:min(620px,calc(100% - 34px));margin:24px auto 12px;padding:15px 18px 14px;text-align:center;color:#fff7df;text-shadow:0 2px 5px rgba(0,0,0,.55)}body.theme-forest .forest-inspiration-label{margin-bottom:8px;font:900 10px/1 "Courier New",monospace;letter-spacing:3px;color:#f0cf72}body.theme-forest .forest-inspiration blockquote{margin:0;font:italic 700 clamp(16px,3.5vw,21px)/1.38 Georgia,serif;color:#fff8e4}body.theme-forest .forest-inspiration-attribution{margin-top:8px;font:900 12px/1.2 "Courier New",monospace;color:#f0d58b}body.theme-forest .forest-inspiration-note{margin-top:6px;font:600 9px/1 Inter,system-ui,sans-serif;letter-spacing:.6px;color:rgba(255,248,223,.72)}@media(max-width:560px){body.theme-forest .forest-inspiration{width:calc(100% - 26px);margin-top:19px;padding-left:12px;padding-right:12px}}';
+    s.textContent='body.theme-forest .forest-inspiration{position:relative;z-index:3;width:min(620px,calc(100% - 34px));margin:24px auto 12px;padding:15px 18px 14px;text-align:center;color:#fff7df;text-shadow:0 2px 5px rgba(0,0,0,.55)}body.theme-forest .forest-inspiration-label{margin-bottom:8px;font:900 10px/1 "Courier New",monospace;letter-spacing:3px;color:#f0cf72}body.theme-forest .forest-inspiration blockquote{margin:0;font:italic 700 clamp(16px,3.5vw,21px)/1.38 Georgia,serif;color:#fff8e4}body.theme-forest .forest-inspiration-attribution{margin-top:8px;font:900 12px/1.2 "Courier New",monospace;color:#f0d58b}@media(max-width:560px){body.theme-forest .forest-inspiration{width:calc(100% - 26px);margin-top:19px;padding-left:12px;padding-right:12px}}';
     document.head.appendChild(s);
   }
   function enhance(){style();addQuote();}
