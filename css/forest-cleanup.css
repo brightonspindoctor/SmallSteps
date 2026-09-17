@@ -1,18 +1,18 @@
 /* Small Steps — Forest support-card cleanup */
-body.theme-forest .support-card:not(.forest-support-card),
-body.theme-forest .about-support-link,
-body.theme-forest .card:not(.forest-support-card):has(a[href*="buymeacoffee"]),
-body.theme-forest a[href*="buymeacoffee"]:not(.forest-coffee-link){
+/* Buy Me a Coffee is permitted only on the More tab's generated support card. */
+.support-card:not(.forest-support-card),
+.about-support-link,
+.card:not(.forest-support-card):has(a[href*="buymeacoffee"]),
+a[href*="buymeacoffee"]:not(.forest-coffee-link){
   display:none!important;
 }
-/* The support link is deliberately allowed only in More. */
-body.theme-forest .screen .card.forest-support-card{
+.forest-support-card{
   display:block!important;
 }
-body.theme-forest .screen .card.forest-support-card a.forest-coffee-link{
+.forest-support-card .forest-coffee-link{
   display:inline-flex!important;
 }
-/* Never show it on the minimal landing screen. */
-body.theme-forest:has(.simple-begin-screen) .forest-support-card{
+/* Never show the More support card on the minimal landing screen. */
+body:has(.simple-begin-screen) .forest-support-card{
   display:none!important;
 }
