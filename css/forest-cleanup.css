@@ -1,11 +1,11 @@
 /* Small Steps — Forest support-card cleanup */
-body.theme-forest .support-card,
+body.theme-forest .support-card:not(.forest-support-card),
 body.theme-forest .about-support-link,
-body.theme-forest .card:has(a[href*="buymeacoffee"]),
-body.theme-forest a[href*="buymeacoffee"]{
+body.theme-forest .card:not(.forest-support-card):has(a[href*="buymeacoffee"]),
+body.theme-forest a[href*="buymeacoffee"]:not(.forest-coffee-link){
   display:none!important;
 }
-/* The support card is deliberately allowed only in More. */
+/* The support link is deliberately allowed only in More. */
 body.theme-forest .screen .card.forest-support-card{
   display:block!important;
 }
