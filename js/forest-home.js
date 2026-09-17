@@ -13,8 +13,32 @@
   function visible(el){if(!el)return false;var s=getComputedStyle(el);return s.display!=='none'&&s.visibility!=='hidden'&&el.offsetWidth>0&&el.offsetHeight>0;}
   function cleanText(el){return(el&&el.textContent||'').replace(/\s+/g,' ').trim().toLowerCase();}
   function findMoreScreen(){var screens=Array.from(document.querySelectorAll('.screen')).filter(visible);for(var i=0;i<screens.length;i++){var heading=screens[i].querySelector('h1,h2');var ht=cleanText(heading);if(ht==='more'||ht.indexOf('more')===0)return screens[i];}for(var j=0;j<screens.length;j++){var t=cleanText(screens[j]);if(/appearance|settings|support|about small steps/.test(t)||t.indexOf('short stretching routines')===0)return screens[j];}return screens.length===1?screens[0]:null;}
-  function removeOldAbout(){document.querySelectorAll('.support-card,.about-panel-stack').forEach(function(el){el.remove();});document.querySelectorAll('.card,.panel,section,article').forEach(function(el){if(!visible(el))return;var t=cleanText(el);if(t==='about small steps'||t.indexOf('short stretching routines, calming meditation')===0||t.indexOf('short stretching routines')===0)el.remove();});}
-  function enhanceAbout(){if(!document.body.classList.contains('theme-forest'))return;removeOldAbout();var more=findMoreScreen();if(!more)return;var existing=more.querySelector('.forest-support-card');if(existing)return;var card=document.createElement('section');card.className='card forest-support-card';card.innerHTML='<p class="forest-support-message">Mighty adventures start with small steps.</p><a class="forest-coffee-link" href="https://buymeacoffee.com/jonnysadler" target="_blank" rel="noopener noreferrer">Buy me a coffee</a>';more.appendChild(card);}
+  function removeOldAbout(){
+    document.querySelectorAll('.support-card:not(.forest-support-card),.about-panel-stack').forEach(function(el){el.remove();});
+    document.querySelectorAll('.card,.panel,section,article').forEach(function(el){
+      if(!visible(el)||el.classList.contains('forest-support-card'))return;
+      var t=cleanText(el);
+      if(t==='about small steps'||t.indexOf('short stretching routines, calming meditation')===0||t.indexOf('short stretching routines')===0)el.remove();
+    });
+    document.querySelectorAll('a[href*="buymeacoffee"]').forEach(function(link){
+      if(!link.closest('.forest-support-card')){
+        var holder=link.closest('.support-card,.card,.panel,section,article')||link;
+        holder.remove();
+      }
+    });
+  }
+  function enhanceAbout(){
+    if(!document.body.classList.contains('theme-forest'))return;
+    var more=findMoreScreen();
+    removeOldAbout();
+    if(!more)return;
+    var existing=more.querySelector('.forest-support-card');
+    if(existing)return;
+    var card=document.createElement('section');
+    card.className='card forest-support-card';
+    card.innerHTML='<p class="forest-support-message">Mighty adventures start with small steps.</p><a class="forest-coffee-link" href="https://buymeacoffee.com/jonnysadler" target="_blank" rel="noopener noreferrer">Buy me a coffee</a>';
+    more.appendChild(card);
+  }
   function ensureAudio(){try{if(!audioCtx)audioCtx=new(window.AudioContext||window.webkitAudioContext)();if(audioCtx.state==='suspended')audioCtx.resume();audioReady=true;}catch(_){audioReady=false;}}
   function playHalfwayChime(){if(!audioReady)ensureAudio();if(!audioCtx)return;try{var now=audioCtx.currentTime,osc=audioCtx.createOscillator(),gain=audioCtx.createGain();osc.type='sine';osc.frequency.setValueAtTime(880,now);osc.frequency.exponentialRampToValueAtTime(1320,now+.08);gain.gain.setValueAtTime(.0001,now);gain.gain.exponentialRampToValueAtTime(.18,now+.012);gain.gain.exponentialRampToValueAtTime(.0001,now+.28);osc.connect(gain);gain.connect(audioCtx.destination);osc.start(now);osc.stop(now+.3);}catch(_){} }
   function visibleSession(){var best=null;document.querySelectorAll('.screen').forEach(function(el){var s=getComputedStyle(el);if(s.display==='none'||s.visibility==='hidden'||!el.offsetWidth||!el.offsetHeight)return;if(/\b\d{1,2}:\d{2}\b/.test(el.innerText||''))best=el;});return best;}
