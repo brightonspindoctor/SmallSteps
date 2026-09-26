@@ -13,11 +13,11 @@
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="assets/icons/icon-192.png" type="image/png">
 <link rel="apple-touch-icon" href="assets/icons/icon-180.png">
-<link rel="stylesheet" href="css/base.css">
-<link rel="stylesheet" href="css/forest-home.css">
-<link rel="stylesheet" href="css/forest-type.css">
-<link rel="stylesheet" href="css/forest-landing.css">
-<link rel="stylesheet" href="css/forest-cleanup.css?v=154">
+<link rel="stylesheet" href="css/base.css?v=155">
+<link rel="stylesheet" href="css/forest-home.css?v=155">
+<link rel="stylesheet" href="css/forest-type.css?v=155">
+<link rel="stylesheet" href="css/forest-landing.css?v=155">
+<link rel="stylesheet" href="css/forest-cleanup.css?v=155">
 <title>Small Steps</title>
 </head>
 <body>
@@ -35,12 +35,12 @@
   window.__natureWalkShowBootError=showBootError;
 })();
 </script>
-<script src="js/app.js?v=154"></script>
-<script src="js/forest-home.js?v=154"></script>
-<script src="js/forest-quotes.js?v=154"></script>
+<script src="js/app.js?v=155"></script>
+<script src="js/forest-home.js?v=155"></script>
+<script src="js/forest-quotes.js?v=155"></script>
 <script>
 if ('serviceWorker' in navigator) {
-  window.addEventListener('load', function(){ navigator.serviceWorker.register('./sw.js?v=154').catch(function(err){ console.warn('Small Steps offline support unavailable:', err); }); });
+  window.addEventListener('load', function(){ navigator.serviceWorker.register('./sw.js').catch(function(err){ console.warn('Small Steps offline support unavailable:', err); }); });
 }
 </script>
 </body>
