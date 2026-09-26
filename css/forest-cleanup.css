@@ -16,3 +16,33 @@ a[href*="buymeacoffee"]:not(.forest-coffee-link){
 body:has(.simple-begin-screen) .forest-support-card{
   display:none!important;
 }
+
+/* Fit pages to the screen so they only scroll when content needs it.
+   The notch and home-bar insets live inside each page's padding rather than on body,
+   so a full-height page is exactly one screen tall. */
+body{padding-top:0;padding-bottom:0}
+body.theme-forest .app{padding-top:calc(12px + env(safe-area-inset-top))}
+@media(max-width:560px){body.theme-forest .app{padding-top:calc(8px + env(safe-area-inset-top))}}
+body.theme-forest .onboarding-shell{padding-top:calc(28px + env(safe-area-inset-top));padding-bottom:calc(28px + env(safe-area-inset-bottom))}
+/* Setup screens have no bottom nav, so don't reserve room for one. */
+body.theme-forest .app:not(:has(.bottom-nav)){padding-bottom:calc(20px + env(safe-area-inset-bottom))}
+body.theme-forest .app:not(:has(.bottom-nav)) .sticky{bottom:calc(12px + env(safe-area-inset-bottom))}
+/* Home: the gap above the buttons flexes so the page fits the screen when it can. */
+body.theme-forest .app:has(.home-actions){display:flex;flex-direction:column}
+body.theme-forest .app:has(.home-actions)>.screen{flex:1 1 auto;display:flex;flex-direction:column}
+body.theme-forest .app:has(.home-actions)>.screen::before{content:"";flex:1 1 0;max-height:205px;min-height:12px}
+body.theme-forest .app:has(.home-actions) .home-actions{margin-top:0}
+body.theme-forest .app:has(.home-actions) .forest-inspiration{margin-top:14px;margin-bottom:6px}
+body.theme-forest .app:has(.home-actions) .week-card{margin-top:10px}
+/* More screen: Privacy and Credits rows (previously unstyled browser buttons). */
+body.theme-forest .about-links{padding:6px}
+body.theme-forest .about-links button{display:flex;align-items:center;gap:12px;width:100%;min-height:52px;padding:10px 12px;border:0;border-radius:9px;background:transparent;color:#173d2e;font:800 16px/1.25 var(--ss-font-ui);text-align:left;cursor:pointer}
+body.theme-forest .about-links button+button{margin-top:2px;box-shadow:0 -1px 0 #e3d6ad}
+body.theme-forest .about-links button span{flex:none;width:30px;height:30px;display:grid;place-items:center;border-radius:8px;background:#174b38;color:#fff5d8;font-size:15px}
+body.theme-forest .about-links button b{margin-left:auto;font:400 26px/1 Georgia,serif;color:#164b37}
+body.theme-forest .about-links button:active{background:#f0e3bd}
+body.theme-forest .about-links button:focus-visible{outline:3px solid #e0c15c;outline-offset:2px}
+/* Danger button: same shape as the other buttons. */
+body.theme-forest .danger{border-width:2px;border-radius:9px}
+/* Meditation title was dark green on the dark session background. */
+body.theme-forest .meditation-session h1{color:#fff8df}
