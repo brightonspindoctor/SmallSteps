@@ -1,4 +1,4 @@
-# Small Steps — Beta 1.55
+# Small Steps — Beta 1.56
 
 A responsive, installable Progressive Web App for stretching, meditation and real-world side quests.
 Progress is stored locally in the browser on each device.
@@ -14,8 +14,8 @@ Progress is stored locally in the browser on each device.
 
 ## Releasing an update
 Bump the version number in two places so installed copies pick up the new files:
-- `index.html`: every `?v=155` on the CSS and JS links
-- `sw.js`: `const VERSION='155'`
+- `index.html`: every `?v=156` on the CSS and JS links
+- `sw.js`: `const VERSION='156'`
 
 Pages always load from the network first, so users see a new `index.html` straight away.
 The version number makes sure it loads the matching CSS and JS rather than cached ones.
