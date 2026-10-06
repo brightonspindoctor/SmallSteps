@@ -2,7 +2,7 @@
    Pages: network first, so new deploys show up straight away; cached copy when offline.
    Other files: cache first, refreshed in the background. */
 // Keep VERSION in step with the ?v= numbers in index.html.
-const VERSION='157';
+const VERSION='158';
 const CACHE='small-steps-v'+VERSION;
 const ASSETS=['./','./index.html','./manifest.webmanifest',
   './css/base.css?v='+VERSION,'./css/forest-home.css?v='+VERSION,'./css/forest-type.css?v='+VERSION,'./css/forest-landing.css?v='+VERSION,'./css/forest-cleanup.css?v='+VERSION,
