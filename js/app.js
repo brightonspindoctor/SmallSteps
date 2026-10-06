@@ -88,7 +88,11 @@ const TREES=[
 {name:"Kapok",symbol:"🌴"},{name:"Larch",symbol:"🍂"},{name:"Apple Tree",symbol:"🍎"},{name:"Date Palm",symbol:"🌴"}
 ];
 const MEDITATIONS=[
-{id:"steady",name:"Steady breathing",description:"A simple breathing practice to settle the nervous system.",prompts:["Let your posture be supported. Allow your hands to rest.","Breathe in gently through the nose.","Let the exhale be a little longer than the inhale.","Notice the pause after breathing out, without forcing it.","When attention wanders, return to the next easy breath.","Let the breath return to its natural rhythm."]}
+{id:"steady",name:"Steady breathing",description:"A simple breathing practice to settle the nervous system.",orb:8,prompts:["Let your posture be supported. Allow your hands to rest.","Breathe in gently through the nose.","Let the exhale be a little longer than the inhale.","Notice the pause after breathing out, without forcing it.","When attention wanders, return to the next easy breath.","Let the breath return to its natural rhythm."]},
+{id:"box",name:"Box breathing",description:"Four equal counts — in, hold, out, hold — to steady a busy mind.",orb:16,prompts:["Sit tall and let your shoulders drop.","Breathe in through the nose for a count of four.","Hold gently at the top for four.","Breathe out slowly for four.","Rest at the bottom for four, then begin again.","If holding feels uncomfortable, shorten the count.","Keep the rhythm steady: in, hold, out, hold.","Let the counting go and breathe naturally."]},
+{id:"body-scan",name:"Body scan",description:"Move your attention slowly from your feet to your head.",orb:8,prompts:["Settle into a comfortable position and close your eyes if you like.","Bring your attention to your feet. Notice any warmth, weight or tingling.","Move up through your calves and knees, letting them soften.","Notice your hips and lower back. Let them feel heavy.","Bring attention to your belly and chest as they rise and fall.","Let your shoulders, arms and hands rest.","Soften your jaw, your face and the space between your eyebrows.","Take in the whole body at once, breathing as it is."]},
+{id:"sleep",name:"Sleep wind-down",description:"Slow, unhurried breathing to help you let go of the day.",orb:10,prompts:["Lie down or sit back somewhere comfortable.","Let each breath out be slow and unhurried.","Notice where your body is supported, and let it take your weight.","If thoughts about tomorrow arrive, set them aside for later.","Relax your forehead, your eyes and your jaw.","Let your breathing slow a little more on its own.","There is nothing else you need to do right now.","Stay with the quiet for as long as you like."]},
+{id:"kindness",name:"Kindness",description:"Offer a few quiet good wishes — to others and to yourself.",orb:8,prompts:["Sit comfortably and take a few easy breaths.","Bring to mind someone who makes you smile.","Silently wish them well: may you be happy, may you be at ease.","Now offer the same wish to yourself.","Think of someone you see often but don't know well, and wish them well too.","Widen the wish to everyone you'll meet today.","Let the feeling settle, and return to your breath."]}
 ];
 const BASELINES=[
 {id:"toe",name:"Toe touch",instruction:"Stand with feet comfortably together and knees straight but not locked. Slowly fold forward, letting your arms hang. Stop at your natural end range without bouncing.",anchors:[[1,"Hands remain above the knees"],[3,"Fingertips reach the middle of the shins"],[5,"Fingertips reach the ankles"],[7,"Fingertips touch the floor"],[10,"Palms rest comfortably on the floor"]]},
@@ -110,13 +114,13 @@ const defaultState=()=>({
  profile:{name:"",sound:"chime",done:false},screen:"today",sessions:[],baselines:[],
  stretchMinutes:0,meditationMinutes:0,lastStretchAt:null,lastBaselineStretchMinutes:0,
  sideQuest:{month:"",completed:false,questIndex:0,count:0},theme:"forest",
- baseline:{toe:5,squat:5,raise:5},forestTotalsMigrated:false
+ baseline:{toe:5,squat:5,raise:5},forestTotalsMigrated:false,hiddenStretches:[]
 });
 let state=loadState();
 let onboardingStep=0;
 let stretchSetup={mode:"Standard",focus:"Lower",length:5,roller:false,muscles:["Piriformis"]};
-let routine=[],exerciseIndex=0,exerciseRemaining=0,stretchTimer=null,halfway=false,stretchCompleting=false,activeStretchKind="stretch";
-let meditationSetup={id:"steady",length:5},meditationRemaining=300,meditationTimer=null,meditationCompleting=false;
+let lastPool=[],routine=[],exerciseIndex=0,exerciseRemaining=0,stretchTimer=null,halfway=false,stretchCompleting=false,activeStretchKind="stretch";
+let meditationSetup={id:state.profile.meditation||"steady",length:5},meditationRemaining=300,meditationTimer=null,meditationCompleting=false;
 let lastRenderDay="";
 function loadState(){
  try{
@@ -137,6 +141,7 @@ function loadState(){
   merged.sideQuest.questIndex=Math.max(0,Math.min(11,Number(merged.sideQuest.questIndex)||0));
   if(!Array.isArray(merged.sessions))merged.sessions=[];
   if(!Array.isArray(merged.baselines))merged.baselines=[];
+  merged.hiddenStretches=Array.isArray(merged.hiddenStretches)?merged.hiddenStretches.filter(n=>typeof n==="string"):[];
   ["stretchMinutes","meditationMinutes"].forEach(k=>{if(!Number.isFinite(Number(merged[k]))||Number(merged[k])<0)merged[k]=0;else merged[k]=Number(merged[k])});
   // One-time migration: preserve minutes earned in either former biome.
   if(!loaded.forestTotalsMigrated){
@@ -185,7 +190,7 @@ function separateRepeats(list){
 }
 function exactRoutine(pool,target,roller){
   let required=[],remaining=target;
-  if(roller){const r=shuffle(EXERCISES.filter(x=>x.category==="Roller"))[0];if(r&&r.seconds<target){required=[r];remaining-=r.seconds}}
+  if(roller){const r=shuffle(EXERCISES.filter(x=>x.category==="Roller"&&!state.hiddenStretches.includes(x.name)))[0];if(r&&r.seconds<target){required=[r];remaining-=r.seconds}}
   // Some exercises share a name (e.g. Open-book rotation is listed under Upper and Back), so keep one of each.
   const base=uniqueByName(pool.filter(x=>x.category!=="Roller"));
   const baseTotal=base.reduce((sum,ex)=>sum+ex.seconds,0);
@@ -203,6 +208,26 @@ function exactRoutine(pool,target,roller){
     if(closest===remaining)break;
   }
   return [...required,...separateRepeats(selected)];
+}
+function weekKey(d){const m=new Date(d);m.setDate(m.getDate()-((m.getDay()+6)%7));return m.toDateString()}
+// Days in a row with a session. One missed day per Monday–Sunday week is forgiven (a grace day),
+// and today doesn't break the streak until it's over.
+function streakInfo(){
+ const done=new Set(state.sessions.filter(s=>s&&s.at).map(s=>new Date(s.at).toDateString()));
+ const d=new Date();d.setHours(12,0,0,0);
+ if(!done.has(d.toDateString()))d.setDate(d.getDate()-1);
+ let count=0,pending=[];const graceWeeks=new Set();
+ for(let i=0;i<3700;i++){
+  if(done.has(d.toDateString())){count++;pending.forEach(w=>graceWeeks.add(w));pending=[]}
+  else{const w=weekKey(d);if(graceWeeks.has(w)||pending.includes(w))break;pending.push(w)}
+  d.setDate(d.getDate()-1);
+ }
+ return {count,graceUsedThisWeek:graceWeeks.has(weekKey(new Date()))};
+}
+function streakMarkup(){
+ const s=streakInfo();
+ if(!s.count)return `<div class="streak-row"><strong>Start a streak today</strong><span>One missed day a week won't break it</span></div>`;
+ return `<div class="streak-row"><strong>${s.count}-day streak</strong><span>${s.graceUsedThisWeek?"Grace day used this week":"1 grace day left this week"}</span></div>`;
 }
 function weekly(){
  const now=new Date(),monday=new Date(now);monday.setDate(now.getDate()-((now.getDay()+6)%7));monday.setHours(0,0,0,0);
@@ -229,6 +254,7 @@ function render(){
  syncSideQuestMonth();
  lastRenderDay=new Date().toDateString();
  if(state.screen==="stretchSession"&&!routine[exerciseIndex]){state.screen="today";save()}
+ if(state.screen==="complete"&&!completeInfo){state.screen="today";save()}
  cancelTimersExcept(state.screen);
  if(!state.profile.done){renderOnboarding();return}
  const root=document.getElementById("root");
@@ -241,7 +267,8 @@ function render(){
  if(state.screen==="baseline") content=renderBaseline();
  if(state.screen==="progress") content=renderProgress();
  if(state.screen==="about") content=renderAbout();
- if(["stretchSession","meditationSession"].includes(state.screen)){
+ if(state.screen==="complete") content=renderComplete();
+ if(["stretchSession","meditationSession","complete"].includes(state.screen)){
    root.innerHTML=`${leafOverlay()}${content}`;
    return;
  }
@@ -299,7 +326,7 @@ function renderToday(){
    <button class="home-action action-stretch" onclick="go('stretchSetup')"><span><strong>Start<br>Stretching</strong></span><b>›</b></button>
    <button class="home-action action-meditate" onclick="go('meditationSetup')"><span><strong>Start<br>Meditation</strong></span><b>›</b></button>
    <button class="home-action action-baseline ${baselineDue()?"baseline-due":""}" onclick="go('baseline')"><span><strong>Baseline</strong><small>${baselineDue()?"Recommended now":"Check your mobility"}</small></span><b aria-hidden="true">›</b></button>
- </div><article class="card week-card"><div class="section-heading"><p class="eyebrow">This week</p><span class="pill">${weekMinutes()} min this week</span></div><div class="week">${weekly().map(d=>`<div class="day ${d.done?"done":""} ${d.today?"today":""}"><span>${d.label}</span><i>${d.done?"✓":""}</i></div>`).join("")}</div></article>`;
+ </div><article class="card week-card"><div class="section-heading"><p class="eyebrow">This week</p><span class="pill">${weekMinutes()} min this week</span></div><div class="week">${weekly().map(d=>`<div class="day ${d.done?"done":""} ${d.today?"today":""}"><span>${d.label}</span><i>${d.done?"✓":""}</i></div>`).join("")}</div>${streakMarkup()}</article>`;
 }
 function renderStretchSetup(){
  return `<article class="card"><p class="eyebrow">Session type</p><div class="segmented">${["Standard","Whole Body","Custom"].map(m=>`<button class="${stretchSetup.mode===m?"active":""}" onclick="stretchSetup.mode='${m}';render()">${m}</button>`).join("")}</div></article>
@@ -308,9 +335,26 @@ function renderStretchSetup(){
  <article class="card"><p class="eyebrow">Length</p><div class="lengths">${[5,7,10].map(n=>`<button class="${stretchSetup.length===n?"active":""}" onclick="stretchSetup.length=${n};render()"><strong>${n}</strong><span>minutes</span></button>`).join("")}</div>
  <label class="switch"><input type="checkbox" ${stretchSetup.roller?"checked":""} onchange="stretchSetup.roller=this.checked"><span>Include one foam-roller exercise</span></label></article>
  <article class="card"><p class="eyebrow">Running</p><div class="choice-grid"><button class="choice" onclick="startRunRoutine('warmup')"><strong>Run warm-up</strong><small>3 min</small></button><button class="choice" onclick="startRunRoutine('cooldown')"><strong>Run cool-down</strong><small>5 min</small></button></div></article>
+ ${state.hiddenStretches.length?`<article class="card hidden-stretches"><p class="eyebrow">Hidden stretches</p><p class="muted">These won't appear in your routines.</p>${state.hiddenStretches.map((n,i)=>`<div class="hidden-row"><span>${esc(n)}</span><button class="secondary" onclick="unhideStretch(${i})">Show again</button></div>`).join("")}</article>`:""}
  <button class="primary sticky routine-cta" onclick="startStretch()">Create my routine</button>`;
 }
 function toggleMuscle(m){stretchSetup.muscles=stretchSetup.muscles.includes(m)?stretchSetup.muscles.filter(x=>x!==m):[...stretchSetup.muscles,m];render()}
+// "Not for me": hide this stretch from future routines and swap in another of the same length if there is one.
+function notForMe(){
+ const ex=routine[exerciseIndex];if(!ex)return;
+ if(!state.hiddenStretches.includes(ex.name))state.hiddenStretches.push(ex.name);
+ stretchRunning=false;stretchEndAt=null;clearInterval(stretchTimer);stretchTimer=null;
+ creditCurrentExercise();
+ const inRoutine=new Set(routine.map(x=>x.name));
+ const swap=shuffle(lastPool.filter(x=>x.seconds===ex.seconds&&!inRoutine.has(x.name)&&!state.hiddenStretches.includes(x.name)))[0];
+ if(swap){routine[exerciseIndex]=swap;routine=routine.filter((x,i)=>i<=exerciseIndex||x.name!==ex.name)}
+ else{
+  routine=routine.filter((x,i)=>i<exerciseIndex||x.name!==ex.name);
+  if(exerciseIndex>=routine.length){save();finishStretch();return}
+ }
+ exerciseRemaining=routine[exerciseIndex].seconds;halfway=false;save();render();
+}
+function unhideStretch(i){state.hiddenStretches.splice(i,1);save();render()}
 function startStretch(){
  activeStretchKind="stretch";
  stretchCompleting=false;
@@ -319,6 +363,9 @@ function startStretch(){
  else if(stretchSetup.mode==="Custom")pool=EXERCISES.filter(x=>x.category!=="Roller"&&stretchSetup.muscles.some(m=>matchesMuscle(x,m)));
  else pool=EXERCISES.filter(x=>x.category===stretchSetup.focus);
  if(!pool.length){alert("Please choose at least one muscle group with matching stretches.");return}
+ pool=pool.filter(x=>!state.hiddenStretches.includes(x.name));
+ if(!pool.length){alert("All the matching stretches are ones you've hidden. You can show them again at the bottom of this page.");return}
+ lastPool=pool;
  routine=exactRoutine(pool,stretchSetup.length*60,stretchSetup.roller);
  if(!routine.length){alert("Please choose at least one muscle group with matching stretches.");return}
  stretchRunning=false;clearInterval(stretchTimer);stretchTimer=null;exerciseIndex=0;exerciseRemaining=routine[0].seconds;halfway=false;stretchEndAt=null;stretchDoneSeconds=0;go("stretchSession");
@@ -340,7 +387,7 @@ function renderStretchSession(){
  ${ex.twoSided?`<p class="side-note">Begin on one side. A chime and vibration will prompt you to swap halfway.</p>`:""}
  <div class="instructions"><div><strong>Set up</strong><p>${esc(ex.setup)}</p></div><div><strong>Movement</strong><p>${esc(ex.movement)}</p></div><div><strong>Breathing</strong><p>${esc(ex.breathing)}</p></div><div><strong>You should feel</strong><p>${esc(ex.feel)}</p></div></div>
  <div class="mistake"><strong>Common mistake</strong><p>${esc(ex.mistake)}</p></div></article>
- <div class="session-actions"><button class="secondary" onclick="nextStretch()">${exerciseIndex===routine.length-1?"Finish":"Next"}</button><button class="primary" id="stretchToggle" onclick="toggleStretchTimer()">Start</button></div></div>`;
+ <div class="session-actions"><button class="secondary" onclick="nextStretch()">${exerciseIndex===routine.length-1?"Finish":"Next"}</button><button class="primary" id="stretchToggle" onclick="toggleStretchTimer()">Start</button></div>${activeStretchKind==="stretch"?`<button class="text-button not-for-me" onclick="notForMe()">Not for me — skip and hide this stretch</button>`:""}</div>`;
 }
 let stretchRunning=false,stretchEndAt=null,stretchDoneSeconds=0;
 function startStretchTimer(){const button=document.getElementById("stretchToggle");if(button)button.textContent=stretchRunning?"Pause":"Start"}
@@ -382,7 +429,7 @@ function finishStretch(){
  minutes=Math.round(stretchDoneSeconds/60);routine=[];exerciseIndex=0;
  if(minutes<1){state.screen="today";save();render();return}
  state.sessions.unshift({id:Date.now(),kind:"stretch",title:label,minutes,at:new Date().toISOString()});
- state.stretchMinutes+=minutes;state.lastStretchAt=new Date().toISOString();state.screen="today";save();render();
+ state.stretchMinutes+=minutes;state.lastStretchAt=new Date().toISOString();playChime();showComplete("stretch",label,minutes);
 }
 let sharedAudio=null;
 function getAudio(){try{if(!sharedAudio){const C=window.AudioContext||window.webkitAudioContext;if(!C)return null;sharedAudio=new C()}if(sharedAudio.state==="suspended")sharedAudio.resume();return sharedAudio}catch{return null}}
@@ -391,18 +438,18 @@ document.addEventListener("pointerdown",unlockAudio,{passive:true,once:true});
 document.addEventListener("visibilitychange",()=>{if(!document.hidden){getAudio();if(stretchRunning)tickStretch();if(meditationRunning)tickMeditation();if(state.screen==="today"&&state.profile.done&&lastRenderDay!==new Date().toDateString())render()}});
 function playChime(){try{const c=getAudio();if(!c)return;const n=c.currentTime;[660,880].forEach((f,i)=>{const o=c.createOscillator(),g=c.createGain();o.frequency.value=f;g.gain.setValueAtTime(.0001,n+i*.18);g.gain.exponentialRampToValueAtTime(.15,n+i*.18+.02);g.gain.exponentialRampToValueAtTime(.0001,n+i*.18+.16);o.connect(g);g.connect(c.destination);o.start(n+i*.18);o.stop(n+i*.18+.18)});navigator.vibrate?.(120)}catch{}}function playMeditationEndSound(kind){try{const c=getAudio();if(!c)return;const n=c.currentTime;const hit=(f,s,d,t,gp)=>{const o=c.createOscillator(),g=c.createGain();o.type=t;o.frequency.setValueAtTime(f,n+s);g.gain.setValueAtTime(.0001,n+s);g.gain.exponentialRampToValueAtTime(gp,n+s+.02);g.gain.exponentialRampToValueAtTime(.0001,n+s+d);o.connect(g);g.connect(c.destination);o.start(n+s);o.stop(n+s+d+.02)};if(kind==="gong"){hit(196,0,2.2,"triangle",.22);hit(294,.12,1.9,"sine",.12);hit(392,.22,1.6,"sine",.07)}else if(kind==="bell"){hit(784,0,1.6,"sine",.16);hit(1174,.08,1.4,"sine",.09);hit(1568,.16,1.1,"sine",.05)}else{hit(523,0,.5,"sine",.12);hit(659,.18,.52,"sine",.10);hit(784,.36,.7,"sine",.09)}navigator.vibrate?.([90,60,90])}catch{}}
 function renderMeditationSetup(){
- const m=MEDITATIONS[0];
- meditationSetup.id=m.id;
- return  `<article class="card"><p class="eyebrow">Practice</p><h2>${m.name}</h2><p class="muted">${m.description}</p></article>
+ if(!MEDITATIONS.some(x=>x.id===meditationSetup.id))meditationSetup.id=MEDITATIONS[0].id;
+ return  `<article class="card"><p class="eyebrow">Practice</p><div class="meditation-list">${MEDITATIONS.map(m=>`<button class="${meditationSetup.id===m.id?"active":""}" onclick="chooseMeditation('${m.id}')"><strong>${esc(m.name)}</strong><span>${esc(m.description)}</span></button>`).join("")}</div></article>
  <article class="card"><p class="eyebrow">Length</p><div class="lengths">${[5,7,10].map(n=>`<button class="${meditationSetup.length===n?"active":""}" onclick="meditationSetup.length=${n};render()"><strong>${n}</strong><span>minutes</span></button>`).join("")}</div></article>
  <article class="card"><p class="eyebrow">Ending sound</p><div class="meditation-sound-control"><label class="sound-select-label" for="meditationSound">Ending sound</label><select id="meditationSound" class="meditation-sound-select" onchange="state.profile.sound=this.value;save()">${MEDITATION_END_SOUNDS.map(sound=>`<option value="${sound.id}" ${state.profile.sound===sound.id?"selected":""}>${sound.name}</option>`).join("")}</select></div><div class="button-row"><button class="secondary" onclick="unlockAudio();playMeditationEndSound(MEDITATION_END_SOUNDS.some(x=>x.id===state.profile.sound)?state.profile.sound:'chime')">Test sound</button></div></article>
  <button class="primary sticky meditation-start" onclick="meditationCompleting=false;meditationRemaining=meditationSetup.length*60;go('meditationSession')">Begin meditation</button>`;
 }
+function chooseMeditation(id){meditationSetup.id=id;state.profile.meditation=id;save();render()}
 let meditationRunning=false,meditationEndAt=null;
 function renderMeditationSession(){
  const m=MEDITATIONS.find(x=>x.id===meditationSetup.id),elapsed=meditationSetup.length*60-meditationRemaining,index=Math.min(m.prompts.length-1,Math.floor(elapsed/(meditationSetup.length*60/m.prompts.length)));
  setTimeout(()=>{const button=document.getElementById("medToggle");if(button)button.textContent=meditationRunning?"Pause":"Begin"},0);
- return `<section class="meditation-session"><button class="text-button" style="position:absolute;top:16px;left:12px;color:white" onclick="endMeditation()">End</button><div class="breathing-orb"></div><p class="eyebrow" style="color:#bdd9ca">Meditation</p><h1>${m.name}</h1><p class="meditation-prompt" id="meditationPrompt">${m.prompts[index]}</p><div class="meditation-time" id="meditationTime">${formatTime(meditationRemaining)}</div><button class="primary" id="medToggle" style="max-width:360px;background:#dbece3;color:#153225" onclick="toggleMeditation()">Begin</button><button class="text-button" style="color:white;margin-top:10px" onclick="finishMeditation()">Finish now</button></section>`;
+ return `<section class="meditation-session"><button class="text-button" style="position:absolute;top:16px;left:12px;color:white" onclick="endMeditation()">End</button><div class="breathing-orb" style="animation-duration:${m.orb||8}s"></div><p class="eyebrow" style="color:#bdd9ca">Meditation</p><h1>${m.name}</h1><p class="meditation-prompt" id="meditationPrompt">${m.prompts[index]}</p><div class="meditation-time" id="meditationTime">${formatTime(meditationRemaining)}</div><button class="primary" id="medToggle" style="max-width:360px;background:#dbece3;color:#153225" onclick="toggleMeditation()">Begin</button><button class="text-button" style="color:white;margin-top:10px" onclick="finishMeditation()">Finish now</button></section>`;
 }
 function updateMeditationTimerDisplay(){
  const m=MEDITATIONS.find(x=>x.id===meditationSetup.id);
@@ -422,8 +469,19 @@ function finishMeditation(){
  meditationEndAt=null;
  const m=MEDITATIONS.find(x=>x.id===meditationSetup.id);
  const minutes=Math.round(Math.max(0,meditationSetup.length*60-meditationRemaining)/60);
- if(minutes>=1){state.sessions.unshift({id:Date.now(),kind:"meditation",title:m.name,minutes,at:new Date().toISOString()});state.meditationMinutes+=minutes}
+ if(minutes>=1){state.sessions.unshift({id:Date.now(),kind:"meditation",title:m.name,minutes,at:new Date().toISOString()});state.meditationMinutes+=minutes;showComplete("meditation",m.name,minutes);return}
  state.screen="today";save();render();
+}
+let completeInfo=null;
+function showComplete(kind,title,minutes){completeInfo={kind,title,minutes};state.screen="complete";save();render()}
+function renderComplete(){
+ const c=completeInfo,s=streakInfo(),total=c.kind==="meditation"?state.meditationMinutes:state.stretchMinutes;
+ const streakLine=s.count>1?`${s.count}-day streak`:s.count===1?"Day one of a new streak":"";
+ return `<section class="complete-screen" role="dialog" aria-label="Session complete"><div class="complete-mark" aria-hidden="true">✓</div><p class="eyebrow">Well done</p><h1>${esc(c.title)}</h1><p class="complete-minutes"><strong>${c.minutes}</strong> ${c.minutes===1?"minute":"minutes"}</p>
+ ${streakLine?`<p class="complete-streak">${streakLine}</p>`:""}
+ <div class="week complete-week">${weekly().map(d=>`<div class="day ${d.done?"done":""} ${d.today?"today":""}"><span>${d.label}</span><i>${d.done?"✓":""}</i></div>`).join("")}</div>
+ <p class="complete-total">${formatTotalMinutes(total)} of ${c.kind==="meditation"?"meditation":"stretching"} in total</p>
+ <button class="primary complete-done" onclick="completeInfo=null;go('today')">Done</button></section>`;
 }
 function renderBaseline(){
  return `<article class="card intro-card ${baselineDue()?"baseline-sparkle-card":""}"><p>Complete each test without a heavy warm-up. Use the same setup each time, move slowly, and stop if you feel sharp pain.</p></article>
@@ -442,8 +500,22 @@ function renderProgress(){
  <article class="card baseline-cycle-card ${due?"baseline-sparkle-card":""}"><p class="eyebrow">Baseline cycle</p><h2>${due?"Baseline ready":"Next baseline"}</h2><p>${!state.baselines.length?"Record your first baseline so you can see how your mobility changes.":due?"You have completed at least 120 minutes of stretching since your last baseline.":`${Math.max(0,120-since)} stretching minutes to go.`}</p>${due?`<button class="primary" onclick="go('baseline')">Do baseline</button>`:""}</article>
  <article class="card"><div class="section-heading"><div><p class="eyebrow">History</p><h2>Your practice</h2></div><span class="pill">${plural(state.baselines.length,"baseline")}</span></div>
  ${state.sessions.length?`<div class="history">${state.sessions.slice(0,30).map(s=>`<div><span class="history-icon ${s.kind}">${s.kind==="stretch"?"↗":"◌"}</span><div><strong>${esc(s.title)}</strong><small>${new Date(s.at).toLocaleDateString()} · ${s.minutes} min</small></div></div>`).join("")}</div>`:`<p class="muted">Your completed sessions will appear here.</p>`}</article>
- ${state.baselines[0]?`<article class="card"><p class="eyebrow">Latest baseline</p>${BASELINES.map(t=>`<div style="display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--line)"><span>${t.name}</span><b>${state.baselines[0].scores[t.id]}/10</b></div>`).join("")}</article>`:""}
+ ${state.baselines[0]?baselineTrendMarkup():""}
  <article class="card add-time-card"><p class="eyebrow">Add completed time</p><p class="muted">Add minutes you completed outside the app. These update your stretching or meditation totals. They do not affect the monthly side quest.</p><div class="manual-time-grid"><label><span>Stretching</span><div><input id="stretchAddMinutes" type="number" min="1" step="1" placeholder="Minutes"><button class="secondary" onclick="addCompletedMinutes('stretch')">Add</button></div></label><label><span>Meditation</span><div><input id="meditationAddMinutes" type="number" min="1" step="1" placeholder="Minutes"><button class="secondary" onclick="addCompletedMinutes('meditation')">Add</button></div></label></div></article>`;
+}
+const TREND_COLOURS={toe:"#174b38",squat:"#b8742a",raise:"#4f7fa8"};
+function baselineTrendMarkup(){
+ const list=[...state.baselines].reverse().filter(b=>b&&b.scores),latest=list[list.length-1],first=list[0];
+ const rows=BASELINES.map(t=>{const now=Number(latest.scores[t.id])||0,diff=now-(Number(first.scores[t.id])||0);
+  return `<div class="trend-row"><span><i style="background:${TREND_COLOURS[t.id]}"></i>${t.name}</span><b>${now}/10${list.length>1&&diff?`<small class="${diff>0?"up":"down"}">${diff>0?"+":""}${diff}</small>`:""}</b></div>`}).join("");
+ if(list.length<2)return `<article class="card"><p class="eyebrow">Baseline trend</p><p class="muted">Save another baseline to see how your scores change over time.</p>${rows}</article>`;
+ const W=320,H=170,L=26,R=10,T=12,B=26,x=i=>L+(W-L-R)*i/(list.length-1),y=v=>T+(H-T-B)*(10-v)/9;
+ const grid=[1,4,7,10].map(v=>`<line x1="${L}" x2="${W-R}" y1="${y(v)}" y2="${y(v)}" stroke="#d8cba0" stroke-width="1"/><text x="${L-6}" y="${y(v)+4}" text-anchor="end" font-size="10" fill="#6b7563">${v}</text>`).join("");
+ const lines=BASELINES.map(t=>{const pts=list.map((b,i)=>[x(i),y(Math.max(1,Math.min(10,Number(b.scores[t.id])||1)))]);
+  return `<polyline points="${pts.map(p=>p.join(",")).join(" ")}" fill="none" stroke="${TREND_COLOURS[t.id]}" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>${pts.map(p=>`<circle cx="${p[0]}" cy="${p[1]}" r="3.5" fill="${TREND_COLOURS[t.id]}"/>`).join("")}`}).join("");
+ const date=b=>new Date(b.at).toLocaleDateString(undefined,{day:"numeric",month:"short"});
+ const labels=`<text x="${L}" y="${H-6}" font-size="10" fill="#6b7563">${date(first)}</text><text x="${W-R}" y="${H-6}" font-size="10" fill="#6b7563" text-anchor="end">${date(latest)}</text>`;
+ return `<article class="card"><p class="eyebrow">Baseline trend</p><svg class="trend-chart" viewBox="0 0 ${W} ${H}" role="img" aria-label="Baseline scores over ${list.length} baselines">${grid}${lines}${labels}</svg>${rows}<p class="muted trend-note">Change shown since your first baseline.</p></article>`;
 }
 function renderAbout(){return `<article class="card about-links"><button onclick="alert('Small Steps keeps your progress in this browser. Your routines and progress are stored locally on this device.')"><span>ⓘ</span>Privacy & data <b>›</b></button><button onclick="alert('Small Steps — a simple way to build a healthier, happier you.')"><span>✦</span>Credits <b>›</b></button></article><article class="card"><p class="eyebrow">Your data</p><p class="muted">Your data stays in this browser unless you export it.</p><div class="button-row"><button class="secondary" onclick="exportData()">Export</button><button class="danger" onclick="resetAll()">Reset everything</button></div></article><article class="card forest-support-card"><p class="forest-support-message">Mighty adventures start with small steps.</p><a class="forest-coffee-link" href="https://buymeacoffee.com/jonnysadler" target="_blank" rel="noopener noreferrer">Buy me a coffee</a></article>`}
 function downloadFile(json,name){const u=URL.createObjectURL(new Blob([json],{type:"application/json"})),a=document.createElement("a");a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),10000)}
