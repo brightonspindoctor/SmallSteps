@@ -46,3 +46,36 @@ body.theme-forest .about-links button:focus-visible{outline:3px solid #e0c15c;ou
 body.theme-forest .danger{border-width:2px;border-radius:9px}
 /* Meditation title was dark green on the dark session background. */
 body.theme-forest .meditation-session h1{color:#fff8df}
+/* Streak row on the Home week card */
+.streak-row{display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap;margin-top:14px;padding-top:12px;border-top:1px solid #e3d6ad}
+.streak-row strong{font-size:16px;color:#173d2e}
+.streak-row span{font-size:13px;color:#59685f}
+/* Well-done screen */
+.complete-screen{position:fixed;inset:0;z-index:70;overflow:auto;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:calc(28px + env(safe-area-inset-top)) 20px calc(28px + env(safe-area-inset-bottom));background:radial-gradient(circle at 50% 25%,#4f806f 0,#205343 40%,#0b2c21 80%);color:#fff8df}
+.complete-screen .eyebrow{color:#f0cf72!important;margin-top:18px}
+.complete-screen h1{color:#fff8df!important;margin:4px 0 6px}
+.complete-mark{width:84px;height:84px;border-radius:50%;display:grid;place-items:center;font-size:42px;font-weight:900;color:#174b38;background:#e0c15c;box-shadow:0 0 0 8px rgba(224,193,92,.25),0 10px 30px rgba(0,0,0,.3);animation:completePop .5s ease-out}
+@keyframes completePop{from{transform:scale(.6);opacity:0}to{transform:none;opacity:1}}
+.complete-minutes{margin:6px 0 2px;font-size:18px;color:#dbe8dc}
+.complete-minutes strong{font-size:44px;color:#fff8df;margin-right:4px}
+.complete-streak{margin:0 0 18px;font-weight:800;color:#f0d58b}
+.complete-week{width:min(360px,100%);margin:0 auto}
+.complete-screen .day{background:rgba(255,248,223,.12);color:#cfdccf}
+.complete-screen .day.done{background:#c8dfc2;color:#174b38}
+.complete-screen .day.today{border:2px solid #e0c15c}
+.complete-total{margin:16px 0 22px;font-size:14px;color:#cfdccf}
+.complete-done{max-width:340px;background:#e0c15c!important;color:#173d2e!important;border-color:#e0c15c!important}
+/* Not for me */
+.not-for-me{display:block;margin:14px auto 4px;color:#f0d58b!important;font-size:14px!important;text-decoration:underline;text-underline-offset:3px}
+.hidden-row{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:8px 0;border-top:1px solid #e3d6ad}
+.hidden-row span{color:#173d2e;font-weight:700;min-width:0}
+.hidden-row .secondary{min-height:40px;padding:6px 12px;flex:none;font-size:14px!important}
+/* Baseline trend */
+.trend-chart{display:block;width:100%;height:auto;margin:6px 0 10px}
+.trend-row{display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-top:1px solid #e3d6ad;color:#173d2e}
+.trend-row span{display:flex;align-items:center;gap:8px}
+.trend-row i{width:10px;height:10px;border-radius:50%;display:inline-block}
+.trend-row small{margin-left:6px;font-size:12px;font-weight:800}
+.trend-row small.up{color:#2b7a4b}.trend-row small.down{color:#a34d3c}
+.trend-note{margin:8px 0 0!important;font-size:12px!important}
+@media(prefers-reduced-motion:reduce){.complete-mark{animation:none}}
