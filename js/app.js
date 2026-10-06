@@ -117,6 +117,7 @@ let onboardingStep=0;
 let stretchSetup={mode:"Standard",focus:"Lower",length:5,roller:false,muscles:["Piriformis"]};
 let routine=[],exerciseIndex=0,exerciseRemaining=0,stretchTimer=null,halfway=false,stretchCompleting=false,activeStretchKind="stretch";
 let meditationSetup={id:"steady",length:5},meditationRemaining=300,meditationTimer=null,meditationCompleting=false;
+let lastRenderDay="";
 function loadState(){
  try{
   const defaults=defaultState();
@@ -164,18 +165,44 @@ function save(){try{localStorage.setItem(KEY,JSON.stringify(state));return true}
 function esc(value){return String(value).replace(/[&<>"']/g,ch=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[ch]))}
 function formatTime(seconds){return `${Math.floor(seconds/60)}:${String(seconds%60).padStart(2,"0")}`}
 function formatTotalMinutes(minutes){const m=Math.max(0,Math.round(Number(minutes)||0)),h=Math.floor(m/60),r=m%60;return h?`${h}h ${r}m`:`${m} min`}
+function plural(n,word){return `${n} ${word}${n===1?"":"s"}`}
 function baselineDue(){return !state.baselines.length||Math.max(0,state.stretchMinutes-state.lastBaselineStretchMinutes)>=120}
 function shuffle(items){const a=[...items];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
 function matchesMuscle(ex,muscle){const text=(ex.target+" "+ex.feel+" "+ex.name).toLowerCase();return (MUSCLE_TERMS[muscle]||[muscle.toLowerCase()]).some(term=>text.includes(term))}
+function uniqueByName(list){const seen=new Set();return list.filter(x=>!seen.has(x.name)&&seen.add(x.name))}
+// Order repeated stretches so the same one never runs twice in a row (whenever that's possible).
+// Each step takes the stretch with the most copies left that differs from the previous one.
+function separateRepeats(list){
+  const rest=[...list],out=[];
+  while(rest.length){
+    const prev=out[out.length-1],left={};
+    rest.forEach(x=>left[x.id]=(left[x.id]||0)+1);
+    let pick=-1;
+    rest.forEach((x,i)=>{if(prev&&x.id===prev.id)return;if(pick<0||left[x.id]>left[rest[pick].id])pick=i});
+    out.push(rest.splice(Math.max(0,pick),1)[0]);
+  }
+  return out;
+}
 function exactRoutine(pool,target,roller){
   let required=[],remaining=target;
   if(roller){const r=shuffle(EXERCISES.filter(x=>x.category==="Roller"))[0];if(r&&r.seconds<target){required=[r];remaining-=r.seconds}}
-  const preferred=shuffle(pool.filter(x=>x.category!=="Roller"));
-  const dp=new Map([[0,[]]]);
-  preferred.forEach(ex=>[...dp.entries()].sort((a,b)=>b[0]-a[0]).forEach(([sum,list])=>{const next=sum+ex.seconds;if(next<=remaining&&!dp.has(next))dp.set(next,[...list,ex])}));
-  let selected=dp.get(remaining);
-  if(!selected){const closest=[...dp.keys()].sort((a,b)=>Math.abs(remaining-a)-Math.abs(remaining-b))[0];selected=dp.get(closest)||[]}
-  return [...required,...selected];
+  // Some exercises share a name (e.g. Open-book rotation is listed under Upper and Back), so keep one of each.
+  const base=uniqueByName(pool.filter(x=>x.category!=="Roller"));
+  const baseTotal=base.reduce((sum,ex)=>sum+ex.seconds,0);
+  if(!baseTotal)return required;
+  // If the chosen areas don't have enough different stretches to fill the time, repeat them in extra rounds
+  // so a 10-minute routine is still 10 minutes. With enough variety, never repeat.
+  const minRounds=Math.ceil(remaining/baseTotal),maxRounds=minRounds>1?minRounds+1:1;
+  let selected=[];
+  for(let rounds=minRounds;rounds<=maxRounds;rounds++){
+    const preferred=[];for(let i=0;i<rounds;i++)preferred.push(...shuffle(base));
+    const dp=new Map([[0,[]]]);
+    preferred.forEach(ex=>[...dp.entries()].sort((a,b)=>b[0]-a[0]).forEach(([sum,list])=>{const next=sum+ex.seconds;if(next<=remaining&&!dp.has(next))dp.set(next,[...list,ex])}));
+    const closest=[...dp.keys()].sort((a,b)=>Math.abs(remaining-a)-Math.abs(remaining-b))[0];
+    selected=dp.get(closest)||[];
+    if(closest===remaining)break;
+  }
+  return [...required,...separateRepeats(selected)];
 }
 function weekly(){
  const now=new Date(),monday=new Date(now);monday.setDate(now.getDate()-((now.getDay()+6)%7));monday.setHours(0,0,0,0);
@@ -199,6 +226,8 @@ function applyTheme(){state.theme="forest";document.body.classList.remove("theme
 function setTheme(theme){if(theme!=="forest")return;state.theme="forest";save();applyTheme();render();}
 function render(){
  applyTheme();
+ syncSideQuestMonth();
+ lastRenderDay=new Date().toDateString();
  if(state.screen==="stretchSession"&&!routine[exerciseIndex]){state.screen="today";save()}
  cancelTimersExcept(state.screen);
  if(!state.profile.done){renderOnboarding();return}
@@ -224,7 +253,7 @@ function renderOnboarding(){
  const root=document.getElementById("root");
  let body="";
  if(onboardingStep===0) body=`<div class="simple-begin-screen"><div class="splash-brand"><img class="simple-begin-logo" src="${APP_LOGO}" alt="Small Steps logo"></div><button class="primary onboarding-begin simple-begin-button" onclick="onboardingStep=1;render()">Begin</button></div>`;
- if(onboardingStep===1) body=`<p class="eyebrow">Welcome</p><h1>What should we call you?</h1><label class="field"><span>Your name</span><input id="nameInput" value="${esc(state.profile.name)}"></label><div class="button-row"><button class="secondary" onclick="onboardingStep=0;render()">Back</button><button class="primary" onclick="saveName()">Continue</button></div>`;
+ if(onboardingStep===1) body=`<p class="eyebrow">Welcome</p><h1>What should we call you?</h1><label class="field"><span>Your name</span><input id="nameInput" value="${esc(state.profile.name)}" enterkeyhint="done" onkeydown="if(event.key==='Enter')saveName()"></label><div class="button-row"><button class="secondary" onclick="onboardingStep=0;render()">Back</button><button class="primary" onclick="saveName()">Continue</button></div>`;
  root.innerHTML=`${leafOverlay()}<main class="onboarding-shell"><section class="onboarding-card">${body}</section></main>`;
  setTimeout(()=>document.getElementById("nameInput")?.focus(),0);
 }
@@ -244,11 +273,18 @@ const SIDE_QUESTS=[
   {title:"Give your time",text:"Offer someone a small, useful act of help in the physical world — carry something, lend a hand, or make their day easier."}
 ];
 function currentQuest(){const now=new Date();const end=new Date(now.getFullYear(),now.getMonth()+1,0);const days=Math.max(0,Math.ceil((new Date(end.getFullYear(),end.getMonth(),end.getDate(),23,59,59)-now)/86400000));const quest=SIDE_QUESTS[state.sideQuest.questIndex%SIDE_QUESTS.length];return {days,end,completed:state.sideQuest.completed,quest};}
-function completeSideQuest(){if(state.sideQuest.completed)return;state.sideQuest.completed=true;state.sideQuest.count=(Number(state.sideQuest.count)||0)+1;save();render();openSideQuest()}
+// The quest changes monthly, but an installed app can stay open across the 1st, so check on every render too.
+function syncSideQuestMonth(){
+ const month=localMonthKey();
+ if(state.sideQuest.month===month)return false;
+ state.sideQuest={month,completed:false,questIndex:new Date().getMonth()%12,count:Math.max(0,Number(state.sideQuest.count)||0)};
+ save();return true;
+}
+function completeSideQuest(){if(syncSideQuestMonth()){render();openSideQuest();return}if(state.sideQuest.completed)return;state.sideQuest.completed=true;state.sideQuest.count=(Number(state.sideQuest.count)||0)+1;save();render();openSideQuest()}
 function openSideQuest(){document.getElementById("sideQuestModal")?.classList.add("open")}
 function closeSideQuest(){document.getElementById("sideQuestModal")?.classList.remove("open")}
 function sideQuestMarkup(){const q=currentQuest();return `<button class="side-quest-envelope" onclick="openSideQuest()" aria-label="Open Happenings letter"><img src="assets/illustrations/happenings-envelope.svg" alt=""><span class="envelope-count">${q.completed?"✓":""}</span></button>`;}
-function sideQuestModalMarkup(){const q=currentQuest();return `<div id="sideQuestModal" class="side-quest-modal" role="dialog" aria-modal="true" aria-label="Happenings letter"><div class="side-quest-panel"><button class="side-quest-close" onclick="closeSideQuest()" aria-label="Close">×</button><div class="letter-ribbon">HAPPENINGS</div><div class="letter-paper"><div class="letter-mark">${q.completed?'✓':'✦'}</div><p class="letter-salutation">Hello,</p><h2>${esc(q.quest.title)}</h2><p class="letter-body">${esc(q.quest.text)}</p><p class="letter-signoff">The Small Steps Team</p></div><div class="letter-footer"><div class="quest-counter"><strong>${q.completed?1:0}</strong><span>/ 1</span></div><div class="quest-progress"><i style="width:${q.completed?100:0}%"></i></div><p class="quest-days">${q.days} days left · ${state.sideQuest.count} letters completed</p><button class="primary" style="margin-top:18px" onclick="completeSideQuest()" ${q.completed?'disabled':''}>${q.completed?'Completed':'Mark complete'}</button></div></div></div>`;}
+function sideQuestModalMarkup(){const q=currentQuest();return `<div id="sideQuestModal" class="side-quest-modal" role="dialog" aria-modal="true" aria-label="Happenings letter"><div class="side-quest-panel"><button class="side-quest-close" onclick="closeSideQuest()" aria-label="Close">×</button><div class="letter-ribbon">HAPPENINGS</div><div class="letter-paper"><div class="letter-mark">${q.completed?'✓':'✦'}</div><p class="letter-salutation">Hello,</p><h2>${esc(q.quest.title)}</h2><p class="letter-body">${esc(q.quest.text)}</p><p class="letter-signoff">The Small Steps Team</p></div><div class="letter-footer"><div class="quest-counter"><strong>${q.completed?1:0}</strong><span>/ 1</span></div><div class="quest-progress"><i style="width:${q.completed?100:0}%"></i></div><p class="quest-days">${plural(q.days,"day")} left · ${plural(state.sideQuest.count,"letter")} completed</p><button class="primary" style="margin-top:18px" onclick="completeSideQuest()" ${q.completed?'disabled':''}>${q.completed?'Completed':'Mark complete'}</button></div></div></div>`;}
 function homeIcon(kind){
  const icons={
   stretch:`<svg viewBox="0 0 48 48" aria-hidden="true"><circle cx="31" cy="9" r="4" fill="currentColor"/><path d="M27 14l-6 9 7 4 5 10M22 23l-10 7M28 27l-8 8M12 30l-5 7M21 35l-2 7" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
@@ -307,7 +343,7 @@ function renderStretchSession(){
  <div class="session-actions"><button class="secondary" onclick="nextStretch()">${exerciseIndex===routine.length-1?"Finish":"Next"}</button><button class="primary" id="stretchToggle" onclick="toggleStretchTimer()">Start</button></div></div>`;
 }
 let stretchRunning=false,stretchEndAt=null,stretchDoneSeconds=0;
-function startStretchTimer(){document.getElementById("stretchToggle").textContent=stretchRunning?"Pause":"Start"}
+function startStretchTimer(){const button=document.getElementById("stretchToggle");if(button)button.textContent=stretchRunning?"Pause":"Start"}
 function toggleStretchTimer(){unlockAudio();stretchRunning=!stretchRunning;document.getElementById("stretchToggle").textContent=stretchRunning?"Pause":"Resume";if(stretchRunning){stretchEndAt=Date.now()+exerciseRemaining*1000;if(!stretchTimer)stretchTimer=setInterval(tickStretch,250)}else{stretchEndAt=null;clearInterval(stretchTimer);stretchTimer=null}}
 function updateStretchTimerDisplay(){
  const ex=routine[exerciseIndex];if(!ex)return;
@@ -352,7 +388,7 @@ let sharedAudio=null;
 function getAudio(){try{if(!sharedAudio){const C=window.AudioContext||window.webkitAudioContext;if(!C)return null;sharedAudio=new C()}if(sharedAudio.state==="suspended")sharedAudio.resume();return sharedAudio}catch{return null}}
 function unlockAudio(){const c=getAudio();if(!c)return;try{const b=c.createBuffer(1,1,22050),src=c.createBufferSource();src.buffer=b;src.connect(c.destination);src.start(0)}catch{}}
 document.addEventListener("pointerdown",unlockAudio,{passive:true,once:true});
-document.addEventListener("visibilitychange",()=>{if(!document.hidden){getAudio();if(stretchRunning)tickStretch();if(meditationRunning)tickMeditation()}});
+document.addEventListener("visibilitychange",()=>{if(!document.hidden){getAudio();if(stretchRunning)tickStretch();if(meditationRunning)tickMeditation();if(state.screen==="today"&&state.profile.done&&lastRenderDay!==new Date().toDateString())render()}});
 function playChime(){try{const c=getAudio();if(!c)return;const n=c.currentTime;[660,880].forEach((f,i)=>{const o=c.createOscillator(),g=c.createGain();o.frequency.value=f;g.gain.setValueAtTime(.0001,n+i*.18);g.gain.exponentialRampToValueAtTime(.15,n+i*.18+.02);g.gain.exponentialRampToValueAtTime(.0001,n+i*.18+.16);o.connect(g);g.connect(c.destination);o.start(n+i*.18);o.stop(n+i*.18+.18)});navigator.vibrate?.(120)}catch{}}function playMeditationEndSound(kind){try{const c=getAudio();if(!c)return;const n=c.currentTime;const hit=(f,s,d,t,gp)=>{const o=c.createOscillator(),g=c.createGain();o.type=t;o.frequency.setValueAtTime(f,n+s);g.gain.setValueAtTime(.0001,n+s);g.gain.exponentialRampToValueAtTime(gp,n+s+.02);g.gain.exponentialRampToValueAtTime(.0001,n+s+d);o.connect(g);g.connect(c.destination);o.start(n+s);o.stop(n+s+d+.02)};if(kind==="gong"){hit(196,0,2.2,"triangle",.22);hit(294,.12,1.9,"sine",.12);hit(392,.22,1.6,"sine",.07)}else if(kind==="bell"){hit(784,0,1.6,"sine",.16);hit(1174,.08,1.4,"sine",.09);hit(1568,.16,1.1,"sine",.05)}else{hit(523,0,.5,"sine",.12);hit(659,.18,.52,"sine",.10);hit(784,.36,.7,"sine",.09)}navigator.vibrate?.([90,60,90])}catch{}}
 function renderMeditationSetup(){
  const m=MEDITATIONS[0];
@@ -365,7 +401,7 @@ function renderMeditationSetup(){
 let meditationRunning=false,meditationEndAt=null;
 function renderMeditationSession(){
  const m=MEDITATIONS.find(x=>x.id===meditationSetup.id),elapsed=meditationSetup.length*60-meditationRemaining,index=Math.min(m.prompts.length-1,Math.floor(elapsed/(meditationSetup.length*60/m.prompts.length)));
- setTimeout(()=>document.getElementById("medToggle").textContent=meditationRunning?"Pause":"Begin",0);
+ setTimeout(()=>{const button=document.getElementById("medToggle");if(button)button.textContent=meditationRunning?"Pause":"Begin"},0);
  return `<section class="meditation-session"><button class="text-button" style="position:absolute;top:16px;left:12px;color:white" onclick="endMeditation()">End</button><div class="breathing-orb"></div><p class="eyebrow" style="color:#bdd9ca">Meditation</p><h1>${m.name}</h1><p class="meditation-prompt" id="meditationPrompt">${m.prompts[index]}</p><div class="meditation-time" id="meditationTime">${formatTime(meditationRemaining)}</div><button class="primary" id="medToggle" style="max-width:360px;background:#dbece3;color:#153225" onclick="toggleMeditation()">Begin</button><button class="text-button" style="color:white;margin-top:10px" onclick="finishMeditation()">Finish now</button></section>`;
 }
 function updateMeditationTimerDisplay(){
@@ -404,7 +440,7 @@ function renderProgress(){
  const sm=state.stretchMinutes,mm=state.meditationMinutes,due=baselineDue(),since=Math.max(0,sm-state.lastBaselineStretchMinutes);
  return `<article class="card totals-card"><p class="eyebrow">Total time</p><div class="totals-grid"><div><strong>${formatTotalMinutes(sm)}</strong><span>Stretching</span></div><div><strong>${formatTotalMinutes(mm)}</strong><span>Meditation</span></div></div></article>
  <article class="card baseline-cycle-card ${due?"baseline-sparkle-card":""}"><p class="eyebrow">Baseline cycle</p><h2>${due?"Baseline ready":"Next baseline"}</h2><p>${!state.baselines.length?"Record your first baseline so you can see how your mobility changes.":due?"You have completed at least 120 minutes of stretching since your last baseline.":`${Math.max(0,120-since)} stretching minutes to go.`}</p>${due?`<button class="primary" onclick="go('baseline')">Do baseline</button>`:""}</article>
- <article class="card"><div class="section-heading"><div><p class="eyebrow">History</p><h2>Your practice</h2></div><span class="pill">${state.baselines.length} baselines</span></div>
+ <article class="card"><div class="section-heading"><div><p class="eyebrow">History</p><h2>Your practice</h2></div><span class="pill">${plural(state.baselines.length,"baseline")}</span></div>
  ${state.sessions.length?`<div class="history">${state.sessions.slice(0,30).map(s=>`<div><span class="history-icon ${s.kind}">${s.kind==="stretch"?"↗":"◌"}</span><div><strong>${esc(s.title)}</strong><small>${new Date(s.at).toLocaleDateString()} · ${s.minutes} min</small></div></div>`).join("")}</div>`:`<p class="muted">Your completed sessions will appear here.</p>`}</article>
  ${state.baselines[0]?`<article class="card"><p class="eyebrow">Latest baseline</p>${BASELINES.map(t=>`<div style="display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--line)"><span>${t.name}</span><b>${state.baselines[0].scores[t.id]}/10</b></div>`).join("")}</article>`:""}
  <article class="card add-time-card"><p class="eyebrow">Add completed time</p><p class="muted">Add minutes you completed outside the app. These update your stretching or meditation totals. They do not affect the monthly side quest.</p><div class="manual-time-grid"><label><span>Stretching</span><div><input id="stretchAddMinutes" type="number" min="1" step="1" placeholder="Minutes"><button class="secondary" onclick="addCompletedMinutes('stretch')">Add</button></div></label><label><span>Meditation</span><div><input id="meditationAddMinutes" type="number" min="1" step="1" placeholder="Minutes"><button class="secondary" onclick="addCompletedMinutes('meditation')">Add</button></div></label></div></article>`;
